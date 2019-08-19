@@ -77,8 +77,9 @@ def watch(URL, price):
 def loadProducts():
     print('[INFO] Loading products...')
     with open('products.csv', newline='') as products_csv:
-        reader = csv.reader(products_csv, delimiter=',', quotechar='|')
+        reader = csv.reader(products_csv, delimiter=' ', quotechar='|')
         for row in reader:
+            print('row:',row)
             PRODUCTS_TO_WATCH.append(Product(row[0], float(row[1])))
 
 if __name__ == "__main__":

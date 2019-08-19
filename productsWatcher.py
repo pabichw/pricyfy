@@ -12,7 +12,7 @@ PRODUCTS_TO_WATCH = []
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
 }
-SCRAPPING_INTERVAL_SECONDS = 60 * 5 #5 minutes
+SCRAPPING_INTERVAL_SECONDS = 60 * 1 #5 minutes
 SLEEP_AFTER_SEND = 60 * 30 #20 minutes
 
 class SHOPS_DOMAINS(): 
@@ -120,9 +120,11 @@ def watch(URL, price):
     threadHandler.start()
 
 def loadProducts():
-    print('[INFO] Loading products...')
+    print('[INFO] Loading proasdasducts...')
     with open('products.csv', newline='') as products_csv:
+        print('a')
         reader = csv.reader(products_csv, delimiter=' ', quotechar='|')
+        print('b')
         for row in reader:
             PRODUCTS_TO_WATCH.append(Product(row[0], float(row[1])))
 
