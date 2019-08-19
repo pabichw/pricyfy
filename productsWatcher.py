@@ -86,7 +86,7 @@ class MediaExpertWatcher(Thread):
         priceFloat = float(price[:len(price) - 2] + '.' + price[len(price) - 2:])
         print('[',datetime.datetime.now(),']','MediaExpert.pl: ', prodTitle, ' : ', priceFloat)
 
-        if priceFloat < self.price:
+        if priceFloat > self.price:
             print('[INFO] Sending email')
             Sender.send_mail(prodTitle, price, self.URL)
             time.sleep(SLEEP_AFTER_SEND)
