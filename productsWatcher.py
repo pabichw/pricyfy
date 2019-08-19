@@ -12,8 +12,8 @@ PRODUCTS_TO_WATCH = []
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
 }
-SCRAPPING_INTERVAL_SECONDS = 60 #half an hour
-SLEEP_AFTER_SEND = 60 * 20 #20 minutes
+SCRAPPING_INTERVAL_SECONDS = 60 * 5 #5 minutes
+SLEEP_AFTER_SEND = 60 * 30 #20 minutes
 
 class SHOPS_DOMAINS(): 
     AMAZON = 'www.amazon.de'
@@ -49,12 +49,12 @@ class AmazonWatcher(Thread):
     def scrap(self):
         prodTitle = self.soup.find(id='productTitle').get_text().strip()
         price = self.soup.find(id='priceblock_ourprice').get_text()
-        
+
         price = price.replace('\xa0€','').replace(',','.')
         priceFloat = float(price)
-        print('[',datetime.datetime.now(),']','Amazon.de: ', prodTitle, ' : ', priceFloat)
+        print('[',datetime.datetime.now(),']','Amazon.de: ', prodTitle, ' : ', priceFloat, ' need: ', self.price)
 
-        if priceFloat < self.price:
+        if priceFloat > self.price:
             print('[INFO] Sending email')
             Sender.send_mail(prodTitle, price, self.URL)
             time.sleep(SLEEP_AFTER_SEND)
@@ -84,8 +84,8 @@ class MediaExpertWatcher(Thread):
         price = self.soup.findAll("p", {'class': 'price_txt'})[0].text
 
         priceFloat = float(price[:len(price) - 2] + '.' + price[len(price) - 2:])
-        print('[',datetime.datetime.now(),']','MediaExpert.pl: ', prodTitle, ' : ', priceFloat)
-
+        print('[',datetime.datetime.now(),']','Amazon.de: ', prodTitle, ' : ', priceFloat, ' need: ', self.price)
+        print('priceFloat:', priceFloat, ' self.price:', self.price)
         if priceFloat > self.price:
             print('[INFO] Sending email')
             Sender.send_mail(prodTitle, price, self.URL)
