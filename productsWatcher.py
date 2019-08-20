@@ -12,8 +12,8 @@ PRODUCTS_TO_WATCH = []
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
 }
-SCRAPPING_INTERVAL_SECONDS = 60 * 1 #5 minutes
-SLEEP_AFTER_SEND = 60 * 30 #20 minutes
+SCRAPPING_INTERVAL_SECONDS = 5  #5 minutes
+SLEEP_AFTER_SEND = 10 #20 minutes
 
 class SHOPS_DOMAINS(): 
     AMAZON = 'www.amazon.de'
