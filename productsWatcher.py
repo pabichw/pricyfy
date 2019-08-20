@@ -12,8 +12,8 @@ PRODUCTS_TO_WATCH = []
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
 }
-SCRAPPING_INTERVAL_SECONDS = 5  #5 minutes
-SLEEP_AFTER_SEND = 10 #20 minutes
+SCRAPPING_INTERVAL_SECONDS = 60 * 5 #5 minutes
+SLEEP_AFTER_SEND = 60 * 20 #20 minutes
 
 class SHOPS_DOMAINS(): 
     AMAZON = 'www.amazon.de'
@@ -51,12 +51,11 @@ class AmazonWatcher(Thread):
         price = self.soup.find(id='priceblock_ourprice').get_text()
 
         price = price.replace('\xa0€','').replace(',','.')
-        priceFloat = float(price)
+        priceParsed = float(price)
         print('[',datetime.datetime.now(),']','Amazon.de: ', prodTitle, ' : ', priceFloat, ' need: ', self.price)
-
-        if priceFloat > self.price:
+        if priceParsed < self.price:
             print('[INFO] Sending email')
-            Sender.send_mail(prodTitle, price, self.URL)
+            Sender.send_mail(prodTitle, priceParsed, self.URL)
             time.sleep(SLEEP_AFTER_SEND)
     
 class MediaExpertWatcher(Thread): 
@@ -83,12 +82,11 @@ class MediaExpertWatcher(Thread):
         prodTitle = self.soup.findAll("h1", {'class': 'pv_title'})[0].text
         price = self.soup.findAll("p", {'class': 'price_txt'})[0].text
 
-        priceFloat = float(price[:len(price) - 2] + '.' + price[len(price) - 2:])
-        print('[',datetime.datetime.now(),']','Amazon.de: ', prodTitle, ' : ', priceFloat, ' need: ', self.price)
-        print('priceFloat:', priceFloat, ' self.price:', self.price)
-        if priceFloat > self.price:
+        priceParsed = float(price[:len(price) - 2] + '.' + price[len(price) - 2:])
+        print('[',datetime.datetime.now(),']','MediaExpert.pl: ', prodTitle, ' : ', priceFloat, ' need: ', self.price)
+        if priceParsed < self.price:
             print('[INFO] Sending email')
-            Sender.send_mail(prodTitle, price, self.URL)
+            Sender.send_mail(prodTitle, priceParsed, self.URL)
             time.sleep(SLEEP_AFTER_SEND)
     
 class Sender: 
@@ -117,18 +115,18 @@ def watch(URL, price):
         threadHandler = AmazonWatcher(stop_flag, URL, price)
     elif domain == SHOPS_DOMAINS.MEDIA_EXPERT:
         threadHandler = MediaExpertWatcher(stop_flag, URL, price)
+    else:
+        print(f'SHOP not supported: {domain}.')
+        return
     threadHandler.start()
 
 def loadProducts():
-    print('[INFO] Loading proasdasducts...')
+    print('[INFO] Loading products...')
     with open('products.csv', newline='') as products_csv:
-        print('a')
         reader = csv.reader(products_csv, delimiter=' ', quotechar='|')
-        print('b')
         for row in reader:
             PRODUCTS_TO_WATCH.append(Product(row[0], float(row[1])))
 
 if __name__ == "__main__":
     loadProducts()
-    print(PRODUCTS_TO_WATCH)
     list(map(lambda product: watch(product.url, product.price), PRODUCTS_TO_WATCH))
