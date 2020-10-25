@@ -1,6 +1,5 @@
 import datetime
-from watchers.watcher import Watcher
-
+from watchers.watcher import Watcher, NoElemFoundExcpetion
 
 class AmazonWatcher(Watcher):
     def __init__(self, event, URL, price):
@@ -8,9 +7,14 @@ class AmazonWatcher(Watcher):
         print(f'[INFO] Starting amazon watcher:\n URL: {URL}\n Expected Price: {price}', )
 
     def scrap(self):
-        prod_title = self.soup.find(id='productTitle').get_text().strip()
-        price = self.soup.find(id='priceblock_ourprice').get_text()
-
+        try:
+            prod_title = self.soup.find(id='productTitle').get_text().strip()
+        except:
+           raise NoElemFoundExcpetion(f'Couldn\'t find title for {self.URL}')
+        try:
+            price = self.soup.find(id='priceblock_ourprice').get_text()
+        except:
+           raise NoElemFoundExcpetion(f'Couldn\'t find price for {prod_title}')
         price = price.replace('\xa0€', '').replace(',', '.')
         price_parsed = float(price)
 

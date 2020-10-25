@@ -12,6 +12,12 @@ headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
 }
 
+class Error(Exception):
+    pass
+
+class NoElemFoundExcpetion(Error):
+    pass
+
 
 class Watcher(Thread):
     price = 0
@@ -32,8 +38,8 @@ class Watcher(Thread):
         while not self.stopped.wait(SCRAPPING_INTERVAL_SECONDS):
             try:
                 self.scrap()
-            except:
-                print(f'Unexpected result of scrapping {self.URL}\nBut I will keep cracking chief! 	(＠＾◡＾)')
+            except NoElemFoundExcpetion as e:
+               print(f'ARGHH! {e}\nBut I will keep cracking chief! 	(＠＾◡＾)')
 
     def sendIfFulfilled(self, price_parsed, prod_title):
         print('[', datetime.datetime.now(), ']', 'Amazon.de: ', prod_title, ' : ', price_parsed, ' need: ', self.price)
