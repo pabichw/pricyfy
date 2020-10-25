@@ -4,7 +4,7 @@ from watchers.watcher import Watcher
 class MediaExpertWatcher(Watcher):
     def __init__(self, event, URL, price):
         Watcher.__init__(self, event, URL, price)
-        print(f'[INFO] Starting MediaExpert watcher:\n URL: {URL}\n Price: {price}', )
+        print(f'[INFO] Starting MediaExpert watcher:\n URL: {URL}\n Expected Price: {price}', )
 
     def scrap(self):
         prod_title = self.soup.find(id='p-inner-name').get_text().strip()
