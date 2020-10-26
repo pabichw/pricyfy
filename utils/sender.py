@@ -4,7 +4,7 @@ import smtplib
 class Sender:
     @staticmethod
     def composeMail(prodTitle, price, url):
-        return f'Subject: Price of {prodTitle} went down!\n\nPrice of {prodTitle} has just went down to {price}! There is a direct link: {url}'.encode(
+        return 'Subject: Price of' + prodTitle + ' went down!\n\nPrice of' + prodTitle + 'has just went down to ' + price + '! There is a direct link:' + url.encode(
             'utf-8')
 
     @staticmethod

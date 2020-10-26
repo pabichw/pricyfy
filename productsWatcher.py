@@ -20,7 +20,7 @@ def watch(URL, price):
     # elif domain == SHOPS_DOMAINS.KOMPUTRONIK:
         # threadHandler = KomputronikWatcher(stop_flag, URL, price)
     else:
-        print(f'Shop not supported: {domain}')
+        print('Shop not supported: ', domain)
         return
     threadHandler.start()
 
