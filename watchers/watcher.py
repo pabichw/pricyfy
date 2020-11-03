@@ -39,7 +39,7 @@ class Watcher(Thread):
             try:
                 self.scrap()
             except NoElemFoundExcpetion as e:
-               print(f'ARGHH! {e}\nBut I will keep cracking chief! 	(＠＾◡＾)')
+               print('ARGHH!', e, '\nBut I will keep cracking chief! (＠＾◡＾)')
 
     def sendIfFulfilled(self, price_parsed, prod_title):
         print('[', datetime.datetime.now(), ']', 'Amazon.de: ', prod_title, ' : ', price_parsed, ' need: ', self.price)
