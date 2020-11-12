@@ -15,6 +15,13 @@ class AmazonWatcher(Watcher):
             price = self.soup.find(id='priceblock_ourprice').get_text()
         except:
            raise NoElemFoundExcpetion('Couldn\'t find price for', prod_title)
+
+        #TODO: need exact element ID ;(
+        #try:
+        #    additional_discount = self.soup.find(id='priceblock_ourprice').get_text()
+        #except:
+        #   raise NoElemFoundExcpetion('No additional discount found for', prod_title)
+
         price = price.replace('\xa0€', '').replace(',', '.')
         price_parsed = float(price)
 
