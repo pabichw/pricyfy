@@ -5,6 +5,7 @@ from const.shopsDomains import ShopsDomains
 from models.product import Product
 from watchers.amazonWatcher import AmazonWatcher
 from watchers.mediaExpertWatcher import MediaExpertWatcher
+from watchers.otodomWatcher import OtodomWatcher
 
 PRODUCTS_TO_WATCH = []
 
@@ -17,6 +18,8 @@ def watch(URL, price):
         threadHandler = AmazonWatcher(stop_flag, URL, price)
     elif domain == ShopsDomains.MEDIA_EXPERT:
         threadHandler = MediaExpertWatcher(stop_flag, URL, price)
+    elif domain == ShopsDomains.OTO_DOM:
+        threadHandler = OtodomWatcher(stop_flag, URL, price)
     # elif domain == SHOPS_DOMAINS.KOMPUTRONIK:
         # threadHandler = KomputronikWatcher(stop_flag, URL, price)
     else:

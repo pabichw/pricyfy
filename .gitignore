@@ -103,6 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-
-.DS_STORE
+.DS_Store
 /.idea
+/.vscode
+/logs
+nohup.out

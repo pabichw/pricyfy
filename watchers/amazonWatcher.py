@@ -25,4 +25,5 @@ class AmazonWatcher(Watcher):
         price = price.replace('\xa0€', '').replace(',', '.')
         price_parsed = float(price)
 
+        print('[', datetime.datetime.now(), ']', ' Amazon.de: ', prod_title, ' : ', price_parsed, ' need: ', self.price)
         self.sendIfFulfilled(price_parsed, prod_title)
