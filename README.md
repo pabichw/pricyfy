@@ -1,9 +1,8 @@
 # pricyfy
-Simple python script for alerting user when amazon price drops below some level
-
+Simple python script for alerting user when price drops below some level
 
 # Requirements
-- Python 3.7 (3.5?)
+- Python 3.7 
 - Beautiful Soup 4
 
 # Setup
@@ -14,15 +13,23 @@ Configure `products.csv` file in your root directory by adding products and thei
 [link] [price]
 ```
 
-
 Example below:
 ```
 https://www.amazon.de/-/pl/dp/B07W13KJZC/r 300.00
 https://www.amazon.de/-/pl/dp/B07WKNQ8JT/r 300.00
 ```
 
+# Supported websited
+At this moment we support only particular websites listed below:
+* amazon.[com/de]
+* mediaexpert.pl
+* otodom.pl
+
 # Run
-To lunch execute script:
+To execute script:
+
 ```
-python3.7 productsWatcher.py
+source env/bin/activate
+pip install
+python productsWatcher.py
 ```
