@@ -1,5 +1,5 @@
 # pricyfy
-Simple python script for alerting user when price drops below some level
+Simple python script for alerting user when price drops below particular level
 
 # Requirements
 - Python 3.7 
@@ -19,7 +19,7 @@ https://www.amazon.de/-/pl/dp/B07W13KJZC/r 300.00
 https://www.amazon.de/-/pl/dp/B07WKNQ8JT/r 300.00
 ```
 
-# Supported websited
+# Supported website
 At this moment we support only particular websites listed below:
 * amazon.[com/de]
 * mediaexpert.pl
