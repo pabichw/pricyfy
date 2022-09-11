@@ -4,7 +4,12 @@ class Logger:
 
     @staticmethod
     def log(id, content):
-        print('Logging for ', id)
+        print('Logging for ', id, 'content', content)
 
-        with open(f'logs/{id}.txt', "a+") as myfile:
-            myfile.write(content)
+        try:
+            with open(f'logs/{id}.txt', "a+") as myfile:
+                myfile.write(f'{content}\n')
+                myfile.close()
+
+        except e:
+            print('e', e)

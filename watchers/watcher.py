@@ -45,5 +45,5 @@ class Watcher(Thread):
         print('[', datetime.datetime.now(), ']', 'Amazon.de: ', prod_title, ' : ', price_parsed, ' need: ', self.price)
         if price_parsed < self.price:
             print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
-            Sender.send_mail(prod_title, price_parsed, self.URL)
+            Sender.send_mail(prod_title, price_parsed, self.URL, to='pabichwiktor@gmail.com')
             time.sleep(SLEEP_AFTER_SEND)

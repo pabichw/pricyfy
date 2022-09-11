@@ -33,3 +33,10 @@ source env/bin/activate
 pip install
 python productsWatcher.py
 ```
+
+Script might need write permissions in order to log product history. In order to set permissions to `logs` directory
+run following command;
+
+```
+sudo chmod 775 logs/
+```

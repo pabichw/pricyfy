@@ -3,3 +3,4 @@ class ShopsDomains():
     MEDIA_EXPERT = 'www.mediaexpert.pl'
     KOMPUTRONIK = 'www.komputronik.pl'
     OTO_DOM = 'www.otodom.pl'
+    OLX = 'www.olx.pl'

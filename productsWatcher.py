@@ -1,11 +1,14 @@
 from threading import Thread, Event
 import csv
+import argparse
 from urllib.parse import urlparse
 from const.shopsDomains import ShopsDomains
 from models.product import Product
 from watchers.amazonWatcher import AmazonWatcher
 from watchers.mediaExpertWatcher import MediaExpertWatcher
 from watchers.otodomWatcher import OtodomWatcher
+from watchers.olxWatcher import OlxWatcher
+from utils.logger import Logger
 
 PRODUCTS_TO_WATCH = []
 
@@ -20,10 +23,12 @@ def watch(URL, price):
         threadHandler = MediaExpertWatcher(stop_flag, URL, price)
     elif domain == ShopsDomains.OTO_DOM:
         threadHandler = OtodomWatcher(stop_flag, URL, price)
+    elif domain == ShopsDomains.OLX:
+        threadHandler = OlxWatcher(stop_flag, URL, price)
     # elif domain == SHOPS_DOMAINS.KOMPUTRONIK:
         # threadHandler = KomputronikWatcher(stop_flag, URL, price)
     else:
-        print('Shop not supported: ', domain)
+        print('Platform not supported: ', domain)
         return
     threadHandler.start()
 
@@ -35,5 +40,13 @@ def loadProducts():
             PRODUCTS_TO_WATCH.append(Product(row[0], float(row[1])))
 
 if __name__ == "__main__":
-    loadProducts()
-    list(map(lambda product: watch(product.url, product.price), PRODUCTS_TO_WATCH))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m', '--mode',  help="set mode [default\loggertest]")
+
+    args = parser.parse_args()
+
+    if args.mode == 'loggertest':
+        Logger.log('test', 'Logger has all required permissions') 
+    else:
+        loadProducts()
+        list(map(lambda product: watch(product.url, product.price), PRODUCTS_TO_WATCH))
