@@ -1,9 +1,11 @@
-import smtplib
+'''logger module'''
+
 
 class Logger:
-
+    '''Logger module'''
     @staticmethod
     def log(id, content):
+        '''log'''
         print('Logging for ', id, 'content', content)
 
         try:
