@@ -50,11 +50,11 @@ class Watcher(Thread):
                       '\nBut I will keep cracking chief! (＠＾◡＾)')
 
     def send_if_fulfilled(self, price_parsed, prod_title):
+        # TODO: divide check and send
         '''Decide if condition fulfilled (to be moved) and send email'''
         print('[', datetime.datetime.now(), ']', 'Amazon.de: ',
               prod_title, ' : ', price_parsed, ' need: ', self.price)
         if price_parsed < self.price:
-            self.price = price_parsed
             print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
             Sender.send_mail(
                 prod_title,
@@ -62,6 +62,7 @@ class Watcher(Thread):
                 self.price,
                 self.url,
                 to='pabichwiktor@gmail.com')
+            self.price = price_parsed
             time.sleep(SLEEP_AFTER_SEND)
 
     def scrap(self):
