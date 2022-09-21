@@ -3,6 +3,10 @@ from threading import Thread, Event
 import csv
 import argparse
 from urllib.parse import urlparse
+from pymongo import MongoClient
+import os
+from dotenv import load_dotenv, find_dotenv
+
 from const.shops_domains import ShopDomains
 from models.product import Product
 from watchers.amazon_watcher import AmazonWatcher
@@ -36,6 +40,20 @@ def watch(url, price):
     thread_handler.start()
 
 
+def test_database():
+    '''test database connection'''
+
+    connection_string = os.environ.get("DATABASE_URL")
+
+    client = MongoClient(connection_string)
+    pricify = client['pricify']
+    test_collection = pricify['test']
+    insert = test_collection.insert_one({"foo": "bar"})
+
+    print('---- DB test ----')
+    print('Insert:', bool(insert))
+
+
 def load_products():
     '''load products from source'''
     print('[INFO] Loading products...')
@@ -48,11 +66,14 @@ def load_products():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--mode', help="set mode [default\\loggertest]")
-
     args = parser.parse_args()
+
+    load_dotenv(find_dotenv())
 
     if args.mode == 'loggertest':
         Logger.log('test', 'Logger has all required permissions')
+    elif args.mode == 'dbtest':
+        test_database()
     else:
         load_products()
         list(map(lambda product: watch(product.url, product.price), PRODUCTS_TO_WATCH))
