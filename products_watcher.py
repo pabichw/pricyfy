@@ -3,8 +3,6 @@ from threading import Thread, Event
 import csv
 import argparse
 from urllib.parse import urlparse
-from pymongo import MongoClient
-import os
 from dotenv import load_dotenv, find_dotenv
 
 from const.shops_domains import ShopDomains
@@ -14,16 +12,19 @@ from watchers.media_expert_watcher import MediaExpertWatcher
 from watchers.otodom_watcher import OtodomWatcher
 from watchers.olx_watcher import OlxWatcher
 from utils.logger import Logger
+from db import db
 
 PRODUCTS_TO_WATCH = []
 
 
 def watch(url, price):
     '''run watch process for each product'''
+
     stop_flag = Event()
     domain = urlparse(url).netloc
 
     thread_handler = Thread()
+
     if domain == ShopDomains.AMAZON:
         thread_handler = AmazonWatcher(stop_flag, url, price)
     elif domain == ShopDomains.MEDIA_EXPERT:
@@ -43,24 +44,38 @@ def watch(url, price):
 def test_database():
     '''test database connection'''
 
-    connection_string = os.environ.get("DATABASE_URL")
-
-    client = MongoClient(connection_string)
-    pricify = client['pricify']
-    test_collection = pricify['test']
+    test_collection = db.get_db()['test']
     insert = test_collection.insert_one({"foo": "bar"})
 
     print('---- DB test ----')
     print('Insert:', bool(insert))
 
 
-def load_products():
-    '''load products from source'''
-    print('[INFO] Loading products...')
+def load_products_from_csv():
+    '''load products from csv'''
+
+    print('[INFO] Loading products from csv...')
+
     with open('products.csv', newline='') as products_csv:
         reader = csv.reader(products_csv, delimiter=' ', quotechar='|')
         for row in reader:
             PRODUCTS_TO_WATCH.append(Product(row[0], float(row[1])))
+
+
+def load_products():
+    '''load products from db'''
+
+    global PRODUCTS_TO_WATCH
+
+    print('[INFO] Loading products from DB...')
+
+    products_collection = db.get_db()['products']
+    products_all = products_collection.find({})
+
+    for document in products_all:
+        print(document)
+        PRODUCTS_TO_WATCH.append(
+            Product(document['url'], document['threshold_price']))
 
 
 if __name__ == "__main__":
