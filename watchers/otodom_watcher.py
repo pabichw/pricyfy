@@ -1,7 +1,7 @@
 '''Otodom watcher module'''
 import datetime
 from watchers.watcher import Watcher, NoElemFoundExcpetion
-from utils.logger import Logger
+from db import db
 
 
 class OtodomWatcher(Watcher):
@@ -28,10 +28,19 @@ class OtodomWatcher(Watcher):
         price = price.replace('zł', '').replace(' ', '')
         price_parsed = float(price)
 
-        print('[', datetime.datetime.now(), ']', ' Otodom.pl: ',
-              prod_title, ' : ', price_parsed, ' need: ', self.price)
-        Logger.log(
-            self.url.rsplit('/', 1)[-1],
-            f'{datetime.datetime.now()},{price_parsed}\n')
+        parse_time = datetime.datetime.now()
+        id = self.url.rsplit('/', 1)[-1].replace('.html', '')
+
+        print('[', parse_time, ']', ' Otodom.pl: ',
+              prod_title, ' : ', price_parsed, ' threshold: ', self.price)
+
+        history_collection = db.get_db()['history']
+        history_collection.insert_one({
+            'product_id': id,
+            'product_title': prod_title,
+            'price_parsed': price_parsed,
+            'price_threshold': self.price,
+            'parse_time': parse_time
+        })
 
         self.send_if_fulfilled(price_parsed, prod_title)

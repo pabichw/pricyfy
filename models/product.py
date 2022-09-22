@@ -1,4 +1,9 @@
+'''module product model'''
+
+
 class Product:
+    '''product model'''
+
     url = ''
     price = 0
 

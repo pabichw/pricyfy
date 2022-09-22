@@ -1,7 +1,7 @@
 '''Olx watcher module'''
 import datetime
 from watchers.watcher import Watcher, NoElemFoundExcpetion
-from utils.logger import Logger
+from db import db
 
 
 class OlxWatcher(Watcher):
@@ -33,10 +33,20 @@ class OlxWatcher(Watcher):
         print('price_parsed', price_parsed)
         print('prod_title', prod_title)
 
-        print('[', datetime.datetime.now(), ']', ' Olx.pl: ',
-              prod_title, ' : ', price_parsed, ' need: ', self.price)
-        Logger.log(
-            self.url.rsplit('/', 1)[-1].replace('.html', ''),
-            f'{datetime.datetime.now()},{price_parsed}\n')
+        parse_time = datetime.datetime.now()
+        id = self.url.rsplit('/', 1)[-1].replace('.html', '')
+
+        print('[', parse_time, ']', ' Olx.pl: ',
+              prod_title, ' : ', price_parsed, ' threshold: ', self.price)
+
+        # TODO: extract to Watcher.py
+        history_collection = db.get_db()
+        history_collection.insert_one({
+            'product_id': id,
+            'product_title': prod_title,
+            'price_parsed': price_parsed,
+            'price_threshold': self.price,
+            'parse_time': parse_time
+        })
 
         self.send_if_fulfilled(price_parsed, prod_title)

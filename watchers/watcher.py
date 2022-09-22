@@ -52,8 +52,7 @@ class Watcher(Thread):
     def send_if_fulfilled(self, price_parsed, prod_title):
         # TODO: divide check and send
         '''Decide if condition fulfilled (to be moved) and send email'''
-        print('[', datetime.datetime.now(), ']', 'Amazon.de: ',
-              prod_title, ' : ', price_parsed, ' need: ', self.price)
+
         if price_parsed < self.price:
             print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
             Sender.send_mail(
