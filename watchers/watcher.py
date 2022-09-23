@@ -36,12 +36,16 @@ class Watcher(Thread):
     def __init__(self, event, URL, price):
         Thread.__init__(self)
         self.stopped = event
+        self.price = price
+        self.product_id = None
+        self.url = URL
+
+        db_product = db.get_db()['products'].find_one({"url":  URL})
+        if db_product.get('status', None) == 'INACTIVE':
+            self.stop()
 
         page = requests.get(URL, headers=headers)
-        self.product_id = None
         self.soup = BeautifulSoup(page.content, 'lxml')
-        self.price = price
-        self.url = URL
 
     def run(self):
         while not self.stopped.wait(SCRAPPING_INTERVAL_SECONDS):
