@@ -40,7 +40,7 @@ class OlxWatcher(Watcher):
               prod_title, ' : ', price_parsed, ' threshold: ', self.price)
 
         # TODO: extract to Watcher.py
-        history_collection = db.get_db()
+        history_collection = db.get_db()['history']
         history_collection.insert_one({
             'product_id': id,
             'product_title': prod_title,
