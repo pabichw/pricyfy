@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from const.options import SCRAPPING_INTERVAL_SECONDS, SLEEP_AFTER_SEND
+from db import db
 from utils.sender import Sender
 
 headers = {
@@ -37,6 +38,7 @@ class Watcher(Thread):
         self.stopped = event
 
         page = requests.get(URL, headers=headers)
+        self.product_id = None
         self.soup = BeautifulSoup(page.content, 'lxml')
         self.price = price
         self.url = URL
@@ -62,8 +64,30 @@ class Watcher(Thread):
                 self.url,
                 to='pabichwiktor@gmail.com')
             self.price = price_parsed
-            time.sleep(SLEEP_AFTER_SEND)
+            # time.sleep(SLEEP_AFTER_SEND)
 
     def scrap(self):
         '''overloaded in site-specific watchers'''
         pass
+
+    def check_inactive(self):
+        '''overloaded in site-specific watchers'''
+        pass
+
+    def mark_as_inactive(self):
+        '''mark product as inactive'''
+
+        db.get_db()['products'].update_one(
+            {"URL": self.product_id}, {"$set": {'status': "INACTIVE"}})
+
+    def add_product_id(self, product_id):
+        '''adds product_id to entry when harvested'''
+
+        db.get_db()['products'].update_one(
+            {"URL": self.URL}, {"$set": {'product_id': product_id}})
+
+    def stop(self):
+        '''stops thread'''
+
+        print('Stopping: ', self.url)
+        self.stopped.set()

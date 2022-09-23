@@ -14,11 +14,20 @@ class OtodomWatcher(Watcher):
 
     def scrap(self):
         '''Do site-specific scrapping'''
+
+        if self.product_id is None:
+            self.product_id = self.url.rsplit('/', 1)[-1].replace('.html', '')
+            self.add_product_id(product_id=self.product_id)
+
         try:
             prod_title = self.soup.find(
                 "h1", {"data-cy": "adPageAdTitle"}).get_text().strip()
         except BaseException:
-            raise NoElemFoundExcpetion('Couldn\'t find title for', self.url)
+            print('Couldn\'t find title for', self.url)
+
+            self.mark_as_inactive()
+            self.stop()
+
         try:
             price = self.soup.find(
                 "strong", {"data-cy": "adPageHeaderPrice"}).get_text()
@@ -29,14 +38,13 @@ class OtodomWatcher(Watcher):
         price_parsed = float(price)
 
         parse_time = datetime.datetime.now()
-        id = self.url.rsplit('/', 1)[-1].replace('.html', '')
 
         print('[', parse_time, ']', ' Otodom.pl: ',
               prod_title, ' : ', price_parsed, ' threshold: ', self.price)
 
         history_collection = db.get_db()['history']
         history_collection.insert_one({
-            'product_id': id,
+            'product_id': self.product_id,
             'product_title': prod_title,
             'price_parsed': price_parsed,
             'price_threshold': self.price,
