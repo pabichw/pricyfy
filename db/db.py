@@ -16,10 +16,11 @@ def get_connection():
         _CONNECTION = MongoClient(os.environ.get("DATABASE_URL"))
     return _CONNECTION
 
+
 def get_db():
     '''get db'''
 
-    return get_connection()['pricify']
+    return get_connection()[os.environ.get("DATABASE_NAME")]
 
 
 __all__ = ['get_connection']

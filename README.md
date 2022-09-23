@@ -52,3 +52,4 @@ sudo chmod 775 logs/
 ## Example env
 
 DATABASE_URL='mongodb://user:pass@localhost/dbname'
+DATABASE_NAME='pricify'
