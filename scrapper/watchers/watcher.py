@@ -1,12 +1,10 @@
 '''watcher module'''
-import datetime
-import time
 from threading import Thread
 
 import requests
 from bs4 import BeautifulSoup
 
-from const.options import SCRAPPING_INTERVAL_SECONDS, SLEEP_AFTER_SEND
+from const.options import SCRAPPING_INTERVAL_SECONDS
 from db import db
 from utils.sender import Sender
 
@@ -67,7 +65,12 @@ class Watcher(Thread):
                 self.price,
                 self.url,
                 to='pabichwiktor@gmail.com')
+
             self.price = price_parsed
+
+            db.get_db()['products'].update_one(
+                {"product_id": self.product_id}, {"$set": {'last_found_price': price_parsed}})
+
             # time.sleep(SLEEP_AFTER_SEND)
 
     def scrap(self):

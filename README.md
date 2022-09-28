@@ -1,55 +1,19 @@
-# pricyfy
+### Pricify
 
-Simple python script for alerting user when price drops below particular level
+Observe price changes of your offers
 
-# Requirements
+#### Structure
 
-- Python 3.7
-- Beautiful Soup 4
+This project is devided into following sub-projects.
 
-# Setup
+- Scrapper
+  _Location_: `/scrapper`
+  Python script gathering price of given ads.
 
-Configure `products.csv` file in your root directory by adding products and their links. Format is:
+- API
+  (Comming soon)
 
-```
-[link] [price]
-[link] [price]
-[link] [price]
-```
+- Client
+  (Comming soon)
 
-Example below:
-
-```
-https://www.amazon.de/-/pl/dp/B07W13KJZC/r 300.00
-https://www.amazon.de/-/pl/dp/B07WKNQ8JT/r 300.00
-```
-
-# Supported website
-
-At this moment we support only particular websites listed below:
-
-- amazon.[com/de]
-- mediaexpert.pl
-- otodom.pl
-
-# Run
-
-To execute script:
-
-```
-source env/bin/activate
-pip install
-python productsWatcher.py
-```
-
-Script might need write permissions in order to log product history. In order to set permissions to `logs` directory
-run following command;
-
-```
-sudo chmod 775 logs/
-```
-
-## Example env
-
-DATABASE_URL='mongodb://user:pass@localhost/dbname'
-DATABASE_NAME='pricify'
+#### TODO
