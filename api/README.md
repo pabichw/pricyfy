@@ -26,4 +26,22 @@ DATABASE_URL='mongodb://<user>:<pass>@localhost/pricify'
 DATABASE_NAME='pricify'
 ```
 
-#### TODO
+#### Database
+
+##### Tokens collection
+
+Tokens let you access certain resources and actions.
+To add a valid token add document to `tokens` collection. It should look like the following:
+
+```
+{ id: "ABCDEFGHILJKMNO12312312" }
+```
+
+Tokens are required in order to access the following routes:
+
+- history
+- products (soon)
+
+#### TODOS
+
+- extract token validation to `app.use`

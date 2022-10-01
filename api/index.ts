@@ -1,6 +1,4 @@
-import { Response, Request } from 'express';
 import dotenv from 'dotenv';
-import db from './db';
 import app from './__app';
 import initRoutes from './routes';
 

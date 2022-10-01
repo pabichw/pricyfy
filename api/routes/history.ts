@@ -1,9 +1,18 @@
 import { Request, Response } from 'express'
 import app from '../__app';
 import db from '../db';
+import { validateToken } from '../utils/tokens';
+import { Token } from '../models/token';
 
 export default (): void => {
-    app.get('/history', async (req: Request, res: Response): Promise<void> => {
+    app.get('/history', async (req: Request<{}, {}, {}, { token: string, id: string }>, res: Response): Promise<void> => {
+        const token: Token = { id: req.query.token }
+        const validationResult = await validateToken(token);
+        if (!validationResult.status) {
+            res.send({ status: 401, error: { msg: 'Unauthorized' }});
+            return;
+        }
+        
         const historyCollection = db.collection('history')
         const history = await historyCollection.find({ product_id: req.query.id }).toArray()
         
