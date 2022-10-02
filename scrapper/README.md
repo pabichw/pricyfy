@@ -30,6 +30,7 @@ At this moment we support only particular websites listed below:
 
 - amazon.[com/de]
 - mediaexpert.pl
+- olx.pl
 - otodom.pl
 
 # Run
@@ -54,6 +55,14 @@ sudo chmod 775 logs/
 DATABASE_URL='mongodb://user:pass@localhost/dbname'
 DATABASE_NAME='pricify'
 
-# TODO 
-* handle multiple email receipants
-* refactor watchers - extract to generic watcher
+# Todo
+
+- handle multiple email receipants
+- refactor watchers - extract to generic watcher
+
+## Bugs
+
+<details>
+    <summary>None!</summary> 
+    ...that I know of
+</details>

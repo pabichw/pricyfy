@@ -15,7 +15,6 @@ class OtodomWatcher(Watcher):
     def scrap(self):
         '''Do site-specific scrapping'''
 
-        print('self.product_id', self.product_id);
 
         if self.product_id is None:
             self.product_id = self.url.rsplit('/', 1)[-1].replace('.html', '')

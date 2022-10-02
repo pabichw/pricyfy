@@ -67,11 +67,10 @@ class Watcher(Thread):
                 to='pabichwiktor@gmail.com')
 
             self.price = price_parsed
-
-            db.get_db()['products'].update_one(
-                {"product_id": self.product_id}, {"$set": {'last_found_price': price_parsed}})
-
             # time.sleep(SLEEP_AFTER_SEND)
+
+        db.get_db()['products'].update_one(
+            {"product_id": self.product_id}, {"$set": {'last_found_price': price_parsed}})
 
     def scrap(self):
         '''overloaded in site-specific watchers'''
@@ -85,13 +84,13 @@ class Watcher(Thread):
         '''mark product as inactive'''
 
         db.get_db()['products'].update_one(
-            {"URL": self.product_id}, {"$set": {'status': "INACTIVE"}})
+            {"url": self.url}, {"$set": {'status': "INACTIVE"}})
 
     def add_product_id(self, product_id):
         '''adds product_id to entry when harvested'''
 
         db.get_db()['products'].update_one(
-            {"URL": self.URL}, {"$set": {'product_id': product_id}})
+            {"url": self.url}, {"$set": {'product_id': product_id}})
 
     def stop(self):
         '''stops thread'''
