@@ -56,6 +56,8 @@ def watch_products_queue():
             db.get_db()['products_queue'].delete_one(
                 {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
 
+    start()
+    
     t = Timer(QUEUE_BROWSING_INTERVAL, start)
     t.start()
     return t
