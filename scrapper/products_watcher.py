@@ -1,11 +1,12 @@
 '''main watcher module'''
-from threading import Thread, Event
+from threading import Thread, Event, Timer
 import csv
 import argparse
 from urllib.parse import urlparse
 from dotenv import load_dotenv, find_dotenv
 
 from const.shops_domains import ShopDomains
+from const.options import QUEUE_BROWSING_INTERVAL
 from models.product import Product
 from watchers.amazon_watcher import AmazonWatcher
 from watchers.media_expert_watcher import MediaExpertWatcher
@@ -39,6 +40,25 @@ def watch(url, price):
         print('Platform not supported: ', domain)
         return
     thread_handler.start()
+
+
+def watch_products_queue():
+    def start():
+        print('[Queue] Browsing queue...')
+        productsQueue = db.get_db()['products_queue'].find({})
+
+        for waiting_product in productsQueue:
+            print(
+                f"-- Adding: {waiting_product['url']} : {waiting_product['threshold_price']}")
+            db.get_db()['products'].insert_one(
+                {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
+            watch(waiting_product['url'], waiting_product['threshold_price'])
+            db.get_db()['products_queue'].delete_one(
+                {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
+
+    t = Timer(QUEUE_BROWSING_INTERVAL, start)
+    t.start()
+    return t
 
 
 def test_database():
@@ -94,3 +114,5 @@ if __name__ == "__main__":
         list(map(lambda product: watch(
             product.url,
             db.get_db()['products'].find_one({'url': product.url}).get('last_found_price', None) or product.price), PRODUCTS_TO_WATCH))
+
+        watch_products_queue()
