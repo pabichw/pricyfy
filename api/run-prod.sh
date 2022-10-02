@@ -1,1 +1,1 @@
-npm i && npm build && npm run start
+npm i && npm run build && nohup npm run start &
