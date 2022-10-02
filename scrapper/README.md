@@ -2,12 +2,12 @@
 
 Simple python script for alerting user when price drops below particular level
 
-# Requirements
+## Requirements
 
 - Python 3.7
 - Beautiful Soup 4
 
-# Setup
+## Setup
 
 There is multiple way to setup products.
 
@@ -43,7 +43,10 @@ There is multiple way to setup products.
     ```
 </details>
 
-# Supported website
+### Products queue
+You can add products when python process is running without having to restart it. Just add product to `products_queue` collection. Product has the same structure as in `products` query. 
+
+## Supported website
 
 At this moment we support only particular websites listed below:
 
@@ -52,7 +55,7 @@ At this moment we support only particular websites listed below:
 - olx.pl
 - otodom.pl
 
-# Run
+## Run
 
 To execute script:
 
@@ -74,12 +77,13 @@ sudo chmod 775 logs/
 DATABASE_URL='mongodb://user:pass@localhost/dbname'
 DATABASE_NAME='pricify'
 
-# Todo
+## Todo
 
 - handle multiple email receipants
 - refactor watchers - extract to generic watcher
+- extract timestamp factory
 
-## Bugs
+## Issues
 
 <details>
     <summary>None!</summary> 

@@ -45,3 +45,5 @@ Tokens are required in order to access the following routes:
 #### TODOS
 
 - extract token validation to `app.use`
+- tests
+- do not add to queue already added products
