@@ -9,20 +9,39 @@ Simple python script for alerting user when price drops below particular level
 
 # Setup
 
-Configure `products.csv` file in your root directory by adding products and their links. Format is:
+There is multiple way to setup products.
 
-```
-[link] [price]
-[link] [price]
-[link] [price]
-```
+<details>
+    <summary>CSV</summary>
+    Configure `products.csv` file in your root directory by adding products and their links. Format is:
+    
+    ```
+    [link] [price]
+    [link] [price]
+    [link] [price]
+    ```
 
-Example below:
+    Example below:
 
-```
-https://www.amazon.de/-/pl/dp/B07W13KJZC/r 300.00
-https://www.amazon.de/-/pl/dp/B07WKNQ8JT/r 300.00
-```
+    ```
+    https://www.amazon.de/-/pl/dp/B07W13KJZC/r 300.00
+    https://www.amazon.de/-/pl/dp/B07WKNQ8JT/r 300.00
+    ```
+
+</details>
+
+<details>
+    <summary>Database</summary>
+    Create `products` collection with given objects:
+    
+    Example:
+    ```
+        {
+            'url': "https://olx.pl/mieszkanie-asdasdasdada"
+            'threshold_price': 399000.00 
+        }
+    ```
+</details>
 
 # Supported website
 
