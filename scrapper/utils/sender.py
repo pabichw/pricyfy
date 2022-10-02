@@ -7,8 +7,10 @@ class Sender:
     @staticmethod
     def compose_mail(prod_title, price, last_price, url):
         '''compose mail'''
-        return 'Subject: 💹 Price of ' + str(prod_title.encode('utf-8')) + ' went down!\n\nPrice of ' + str(prod_title.encode('utf-8')) + ' has just went down to ' + str(
-            price) + '!\n\nThere is a direct link:' + str(url.encode('utf-8')) + '\n\nLast price: ' + str(last_price)
+        return ('Subject: 💹 Price of ' + prod_title + ' went down!\n\nPrice of ' + prod_title + ' has just went down to '
+                + str(price) + '!\n\nThere is a direct link:' +
+                url + '\n\nLast price: ' +
+                str(last_price)).encode('utf-8').strip()
 
     @staticmethod
     def send_mail(
