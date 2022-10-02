@@ -1,5 +1,5 @@
 import db from '../db';
-import { Token } from '../models/token';
+import { Token } from '../models/Token';
 
 export const validateToken = async (token: Token): Promise<{ status: boolean, error?: string }> => {
     const tokensCollection = db.collection('tokens')

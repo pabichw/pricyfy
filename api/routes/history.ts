@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import app from '../__app';
 import db from '../db';
 import { validateToken } from '../utils/tokens';
-import { Token } from '../models/token';
+import { Token } from '../models/Token';
 
 export default (): void => {
     app.get('/history', async (req: Request<{}, {}, {}, { token: string, id: string }>, res: Response): Promise<void> => {

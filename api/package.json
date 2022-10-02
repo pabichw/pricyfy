@@ -1,5 +1,5 @@
 {
-  "name": "pricify-api",
+  "name": "pricyfy-api",
   "version": "1.0.0",
   "description": "Serves data scrapped by the scrapper",
   "main": "index.js",
