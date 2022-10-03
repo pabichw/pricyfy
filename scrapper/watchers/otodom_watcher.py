@@ -10,7 +10,7 @@ class OtodomWatcher(Watcher):
     def __init__(self, event, URL, price):
         Watcher.__init__(self, event, URL, price)
         print('[INFO] Starting OtoDom watcher:\n URL: ',
-              URL, '\n Expected Price: ', price)
+              URL, '\n Threshold price: ', price)
 
     def scrap(self):
         '''Do site-specific scrapping'''

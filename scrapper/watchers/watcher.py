@@ -59,12 +59,16 @@ class Watcher(Thread):
 
         if price_parsed < self.price:
             print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
+
+            db_product = db.get_db()['products'].find_one(
+                {"url":  self.url})
+
             Sender.send_mail(
                 prod_title,
                 price_parsed,
                 self.price,
                 self.url,
-                to='pabichwiktor@gmail.com')
+                to=db_product.get('recipients', []))
 
             self.price = price_parsed
             # time.sleep(SLEEP_AFTER_SEND)

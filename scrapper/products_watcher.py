@@ -49,15 +49,20 @@ def watch_products_queue():
 
         for waiting_product in productsQueue:
             print(
-                f"-- Adding: {waiting_product['url']} : {waiting_product['threshold_price']}")
+                f"-- Adding: {waiting_product['url']} : {waiting_product['threshold_price']} : {waiting_product['threshold_price']}")
+
+            # TODO: update if exists (also handle if email exists)
+
             db.get_db()['products'].insert_one(
-                {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
+                {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients']})
+
             watch(waiting_product['url'], waiting_product['threshold_price'])
+
             db.get_db()['products_queue'].delete_one(
                 {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
 
     start()
-    
+
     t = Timer(QUEUE_BROWSING_INTERVAL, start)
     t.start()
     return t

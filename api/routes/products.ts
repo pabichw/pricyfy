@@ -12,7 +12,7 @@ export default (): void => {
         res.send({ status: 200, data: { product }});
     });
 
-    app.post('/products/watch', async (req: Request<{}, {}, {}, {url: string, threshold_price: string, token: string}>, res: Response): Promise<void> => {
+    app.post('/products/watch', async (req: Request<{}, {}, {}, {url: string, threshold_price: string, token: string, email: string}>, res: Response): Promise<void> => {
         const token: Token = { id: req.query.token }
         const validationResult = await validateToken(token);
         if (!validationResult.status) {
@@ -22,10 +22,20 @@ export default (): void => {
 
         const { query } = req;
         const productsCollection = db.collection('products_queue')
-        const result = await productsCollection.insertOne({ url: query.url, threshold_price: query.threshold_price })
 
-        if (result) {
-            console.log(`[Queue] Product added: ${query.url} : ${query.threshold_price}`)
+        const findResult = await productsCollection.countDocuments({ 'url': query.url }, { limit: 1 });
+        if (findResult > 0) {
+            await productsCollection.updateOne({ url: query.url }, { $addToSet: { recipients: query.email }})
+        } else {
+            const insertResult = await productsCollection.insertOne({ 
+                url: query.url, 
+                threshold_price: Number(query.threshold_price),
+                recipients: [query.email]
+            })
+    
+            if (insertResult) {
+                console.log(`[Queue] Product added: ${query.url} : ${query.threshold_price}`)
+            }
         }
 
         res.send({ status: 200, data: { msg: 'OK' }});

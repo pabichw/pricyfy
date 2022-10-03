@@ -44,7 +44,8 @@ There is multiple way to setup products.
 </details>
 
 ### Products queue
-You can add products when python process is running without having to restart it. Just add product to `products_queue` collection. Product has the same structure as in `products` query. 
+
+You can add products when python process is running without having to restart it. Just add product to `products_queue` collection. Product has the same structure as in `products` query.
 
 ## Supported website
 
@@ -76,6 +77,9 @@ sudo chmod 775 logs/
 
 DATABASE_URL='mongodb://user:pass@localhost/dbname'
 DATABASE_NAME='pricify'
+SMTP_HOST='xxx.com'
+SMTP_FROM='info@yourdomain.com'
+SMTP_PASS='YourPassword'
 
 ## Todo
 
