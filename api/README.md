@@ -47,3 +47,4 @@ Tokens are required in order to access the following routes:
 - extract token validation to `app.use`
 - tests
 - do not add to queue already added products
+- handle missing params on `/products/watch` endpoint (and other endpoints as well)
