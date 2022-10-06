@@ -166,7 +166,7 @@
 		{
 			"files": ["src/**/*.ts?(x)"],
 			"parserOptions": {
-				"project": ["./tsconfig.json"]
+				"project": ["**/tsconfig.json"]
 			}
 		},
 		{
