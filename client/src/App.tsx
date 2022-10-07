@@ -4,7 +4,6 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 const Home = lazy(async () => import('pages/Home'))
-const Details = lazy(async () => import('pages/Details'))
 
 export default function App(): ReactElement {
 	return (
@@ -12,7 +11,6 @@ export default function App(): ReactElement {
 			<Suspense fallback={<LoadingOrError />}>
 				<Routes>
 					<Route path='/' element={<Home />} />
-					<Route path=':fruitName' element={<Details />} />
 				</Routes>
 			</Suspense>
 		</BrowserRouter>
