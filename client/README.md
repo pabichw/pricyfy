@@ -39,3 +39,9 @@ pnpm install
 - `pnpm format` - format all files with Prettier.
 - `pnpm lint` - runs TypeScript, ESLint and Stylelint.
 - `pnpm validate` - runs `lint`, `test:ci` and `test:e2e:ci`.
+
+## ENV
+
+```
+VITE_API_URL=http://yourservice.com:1234
+```
