@@ -5,8 +5,10 @@ const formsPlugin = require('@tailwindcss/forms')
 const config = {
 	content: ['index.html', 'src/**/*.tsx'],
 	theme: {
-		fontFamily: {
-			sans: ['Inter', ...defaultConfig.theme.fontFamily.sans]
+		extend: {
+			fontFamily: {
+				sans: ['Inter var', ...defaultConfig.theme.fontFamily.sans]
+			}
 		}
 	},
 	experimental: { optimizeUniversalDefaults: true },
