@@ -6,8 +6,7 @@ interface Properties extends React.HTMLProps<HTMLInputElement> {
 }
 
 const Field = forwardRef<RTCEncodedVideoFrameType, Properties>(
-	({ name, label, register, type, ...rest }): JSX.Element => {
-		return (
+	({ name, label, register, type, ...rest }): JSX.Element => (
 			<div>
 				<label htmlFor={name} className='hidden'>
 					{label}
@@ -21,7 +20,6 @@ const Field = forwardRef<RTCEncodedVideoFrameType, Properties>(
 				/>
 			</div>
 		)
-	}
 )
 
 export default Field
