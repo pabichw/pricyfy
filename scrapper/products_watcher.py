@@ -114,9 +114,9 @@ if __name__ == "__main__":
     elif args.mode == 'dbtest':
         test_database()
     else:
-        # load_products()
-        # list(map(lambda product: watch(
-        #     product.url,
-        #     db.get_db()['products'].find_one({'url': product.url}).get('last_found_price', None) or product.price), PRODUCTS_TO_WATCH))
+        load_products()
+        list(map(lambda product: watch(
+            product.url,
+            db.get_db()['products'].find_one({'url': product.url}).get('last_found_price', None) or product.price), PRODUCTS_TO_WATCH))
 
         watch_products_queue()
