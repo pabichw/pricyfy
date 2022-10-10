@@ -14,6 +14,7 @@ from watchers.otodom_watcher import OtodomWatcher
 from watchers.olx_watcher import OlxWatcher
 from utils.logger import Logger
 from db import db
+from utils.threading import set_interval
 
 PRODUCTS_TO_WATCH = []
 
@@ -61,11 +62,7 @@ def watch_products_queue():
             db.get_db()['products_queue'].delete_one(
                 {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
 
-    start()
-
-    t = Timer(QUEUE_BROWSING_INTERVAL, start)
-    t.start()
-    return t
+    set_interval(start, QUEUE_BROWSING_INTERVAL)
 
 
 def test_database():
@@ -117,9 +114,9 @@ if __name__ == "__main__":
     elif args.mode == 'dbtest':
         test_database()
     else:
-        load_products()
-        list(map(lambda product: watch(
-            product.url,
-            db.get_db()['products'].find_one({'url': product.url}).get('last_found_price', None) or product.price), PRODUCTS_TO_WATCH))
+        # load_products()
+        # list(map(lambda product: watch(
+        #     product.url,
+        #     db.get_db()['products'].find_one({'url': product.url}).get('last_found_price', None) or product.price), PRODUCTS_TO_WATCH))
 
         watch_products_queue()
