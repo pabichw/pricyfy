@@ -13,7 +13,7 @@ export default function HomePage(): ReactElement {
 							Pricyfy
 						</p>
 						<p className='text-m font-regular text-center tracking-wide text-gray-500'>
-							Monitor ads price
+							Monitor ads prices
 						</p>
 					</div>
 					<ProductAdd />

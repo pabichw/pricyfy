@@ -3,6 +3,7 @@ import Button from 'components/_atoms/Button'
 import Field from 'components/_atoms/Field'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast  from 'react-hot-toast'
 
 interface TForm { url: string, threshold_price: string, code: string, email: string }
 
@@ -11,6 +12,9 @@ enum STEPS {
 	SECOND,
 	THIRD
 }
+
+const notifyAdded = (): void => { toast.success('Added successfully!') }
+const notifyError = (): void => { toast.error('Error') };
 
 function ProductAdd(): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,7 +29,9 @@ function ProductAdd(): JSX.Element {
 			threshold_price: data.threshold_price,
 			token: data.code,
 			email: data.email
-		}).finally(() => setIsLoading(false))
+		})
+		.then(notifyAdded, notifyError)
+		.finally(() => setIsLoading(false))
 	}
 
 	return (
