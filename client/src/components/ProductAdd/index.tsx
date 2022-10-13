@@ -41,12 +41,14 @@ function ProductAdd(): JSX.Element {
 		>
 			{step === STEPS.FIRST && (
 				<>
-					<Field name='url' label='Url' register={register} />
-					<Field
-						name='threshold_price'
-						label='Threshold price'
-						register={register}
-					/>
+					<fieldset className='united-borders'>
+						<Field name='url' label='Url' register={register} />
+						<Field
+							name='threshold_price'
+							label='Threshold price'
+							register={register}
+						/>
+					</fieldset>
 					<div className='mt-5'>
 						<Button onClick={(): void => setStep(STEPS.SECOND)}>Confirm</Button>
 					</div>

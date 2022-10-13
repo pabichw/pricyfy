@@ -24,4 +24,24 @@
 		font-display: swap;
 		src: url('/fonts/Inter-Bold.woff2') format('woff2');
 	}
+
+	@layer utilities {
+		.united-borders {
+			border-radius: 0;
+		}
+
+		.united-borders > div > input:not(:last-of-type) {
+			border-bottom-color: transparent;
+		}
+		
+		.united-borders > div:first-of-type > input {
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+		
+		.united-borders > div:last-of-type > input {
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+	}
 }
