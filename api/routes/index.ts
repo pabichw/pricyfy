@@ -7,8 +7,8 @@ const initRoot = (): void => {
     app.get('/', async (_, res: Response): Promise<void> => {
         res.send('Nic tu nie ma. ⚠️');
     });
-      
 }
+
 export default (): void => {
     initRoot();
     initProducts();
