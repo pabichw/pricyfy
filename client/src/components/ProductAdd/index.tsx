@@ -13,9 +13,20 @@ enum STEPS {
 	THIRD
 }
 
-const notifyAdded = (): void => { toast.success('Added successfully!') }
-const notifyError = (): void => { toast.error('Error') };
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+const SUCCESS_HTTP_CODES = new Set([200, 201]);
 
+const notifyAdded = (): void => { toast.success('Added successfully!') }
+const notifyError = (message: string): void => { toast.error(`Error: ${message}`) };
+
+const showNotification = (data: { status: number, error: { msg: string } }): void => {
+	// TODO: move to global request 'interceptor' 
+	if (SUCCESS_HTTP_CODES.has(data.status)) {
+		notifyAdded();
+	} else {
+		notifyError(data.error.msg)
+	}
+}
 function ProductAdd(): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [step, setStep] = useState<STEPS>(STEPS.FIRST)
@@ -30,7 +41,7 @@ function ProductAdd(): JSX.Element {
 			token: data.code,
 			email: data.email
 		})
-		.then(notifyAdded, notifyError)
+		.then(showNotification)
 		.finally(() => setIsLoading(false))
 	}
 

@@ -22,6 +22,7 @@ export default (): void => {
         const validationResult = await validateToken(token);
 
         if (!validationResult.status) {
+            res.status(401);
             res.send({ status: 401, error: { msg: 'Unauthorized' }});
             return;
         }
