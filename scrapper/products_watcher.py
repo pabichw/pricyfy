@@ -1,5 +1,6 @@
 '''main watcher module'''
-from threading import Thread, Event, Timer
+from threading import Thread, Event
+from os import environ
 import csv
 import argparse
 from urllib.parse import urlparse
@@ -8,6 +9,7 @@ from dotenv import load_dotenv, find_dotenv
 from const.shops_domains import ShopDomains
 from const.options import QUEUE_BROWSING_INTERVAL
 from models.product import Product
+from utils.sender import EmailTemplates, Sender
 from watchers.amazon_watcher import AmazonWatcher
 from watchers.media_expert_watcher import MediaExpertWatcher
 from watchers.otodom_watcher import OtodomWatcher
@@ -56,11 +58,17 @@ def watch_products_queue():
 
             db.get_db()['products'].insert_one(
                 {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients']})
-
             watch(waiting_product['url'], waiting_product['threshold_price'])
-
             db.get_db()['products_queue'].delete_one(
                 {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
+
+            Sender.send_mail(
+                variables={
+                    'url': waiting_product['url'],
+                    'threshold_price': waiting_product['threshold_price']
+                },
+                to=waiting_product['recipients'],
+                type=EmailTemplates.WATCH_STARTED)
     start()
     set_interval(start, QUEUE_BROWSING_INTERVAL)
 
@@ -73,6 +81,16 @@ def test_database():
 
     print('---- DB test ----')
     print('Insert:', bool(insert))
+
+
+def test_email():
+    '''test email sender'''
+
+    email = environ.get('DEV_EMAIL')
+
+    print('---- Email sender test ----')
+    print(f'Sending to {email}...')
+    Sender.send_mail(to=[email], type=EmailTemplates.TEST)
 
 
 def load_products_from_csv():
@@ -104,7 +122,8 @@ def load_products():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--mode', help="set mode [default\\loggertest]")
+    parser.add_argument(
+        '-m', '--mode', help="set mode [default\\loggertest\\emailtest\\dbtest]")
     args = parser.parse_args()
 
     load_dotenv(find_dotenv())
@@ -113,6 +132,8 @@ if __name__ == "__main__":
         Logger.log('test', 'Logger has all required permissions')
     elif args.mode == 'dbtest':
         test_database()
+    elif args.mode == 'emailtest':
+        test_email()
     else:
         load_products()
         list(map(lambda product: watch(

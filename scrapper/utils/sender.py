@@ -1,28 +1,48 @@
 '''sender module'''
+from enum import Enum
 import smtplib
 import os
 from email.mime.text import MIMEText
 
 
+class EmailTemplates(Enum):
+    TEST = 0
+    PRICE_CHANGE = 1
+    WATCH_STARTED = 2
+
+
 class Sender:
     '''Sender'''
     @staticmethod
-    def compose_mail(prod_title, price, last_price, url, to):
+    def compose_mail(variables, type):
         '''compose mail'''
-        msg = MIMEText(f"""Price of {prod_title} has just went down to 
-                          {str(price)}\n\nThere is a direct link: {url}\n\nLast price: {str(last_price)}""")
-        msg['Subject'] = f"""Subject: 💹 Price of {prod_title}  went down!"""
+
+        msg = {}
         msg['From'] = os.environ.get("SMTP_FROM")
-        # msg['To'] = ", ".join(to)
+
+        if type is EmailTemplates.TEST:
+            msg = MIMEText(
+                f"""⚠️ TEST ⚠️\nęśąćż\nLorem ipsum doret emet? Emet!""")
+            msg['Subject'] = f"""Email service testing"""
+        elif type is EmailTemplates.PRICE_CHANGE:
+            msg = MIMEText(f"""Price of {variables.get('prod_title', None)} has just went down to 
+                            {str(variables.get('price', None))}\n\nThere is a direct link: {variables.get('url', None)}\n\nLast price: {str(variables.get('last_price', None))}""")
+            msg['Subject'] = f"""Subject: 💹 Price of {variables.get('prod_title', None)}  went down!"""
+        elif type is EmailTemplates.WATCH_STARTED:
+            msg = MIMEText(
+                f"""Watching offer {variables.get('url', None)} has started. You will be notified once the price has changed!\n\nInitial price: {variables.get('threshold_price', None)}""")
+            msg['Subject'] = f"""Subject: ℹ️ Watching has started!"""
+        else:
+            msg = MIMEText(
+                """Unrecognized email template. Please notify development team""")
+
         return msg.as_string()
 
-    @ staticmethod
+    @staticmethod
     def send_mail(
-            prod_title,
-            price,
-            last_price,
-            url,
-            to=[]):
+            variables={},
+            to=[],
+            type=EmailTemplates.PRICE_CHANGE):
         '''send mail'''
         server = smtplib.SMTP(os.environ.get("SMTP_HOST"), 587)
         server.ehlo()
@@ -36,9 +56,7 @@ class Sender:
             os.environ.get("SMTP_FROM"),
             to,
             Sender.compose_mail(
-                prod_title,
-                price,
-                last_price,
-                url,
-                to))
+                variables,
+                type
+            ))
         server.quit()

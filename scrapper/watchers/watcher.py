@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from const.options import SCRAPPING_INTERVAL_SECONDS
 from db import db
-from utils.sender import Sender
+from utils.sender import EmailTemplates, Sender
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
@@ -64,11 +64,14 @@ class Watcher(Thread):
                 {"url":  self.url})
 
             Sender.send_mail(
-                prod_title,
-                price_parsed,
-                self.price,
-                self.url,
-                to=db_product.get('recipients', []))
+                variables={
+                    'prod_title': prod_title,
+                    'last_price': self.price,
+                    'url': self.url,
+                    'price': price_parsed,
+                },
+                to=db_product.get('recipients', []),
+                type=EmailTemplates.PRICE_CHANGE)
 
             self.price = price_parsed
             # time.sleep(SLEEP_AFTER_SEND)
