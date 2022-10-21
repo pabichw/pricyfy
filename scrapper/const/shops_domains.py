@@ -10,3 +10,4 @@ class ShopDomains():
     KOMPUTRONIK = 'www.komputronik.pl'
     OTO_DOM = 'www.otodom.pl'
     OLX = 'www.olx.pl'
+    M_OLX = 'www.m.olx.pl'

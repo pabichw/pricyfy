@@ -37,6 +37,8 @@ def watch(url, price):
         thread_handler = OtodomWatcher(stop_flag, url, price)
     elif domain == ShopDomains.OLX:
         thread_handler = OlxWatcher(stop_flag, url, price)
+    elif domain == ShopDomains.M_OLX:
+        thread_handler = OlxWatcher(stop_flag, url, price)
     # elif domain == SHOPS_DOMAINS.KOMPUTRONIK:
         # threadHandler = KomputronikWatcher(stop_flag, URL, price)
     else:
