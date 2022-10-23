@@ -26,7 +26,7 @@ class OlxWatcher(Watcher):
             print('Couldn\'t find title for', self.url)
 
             self.mark_as_inactive()
-            self.stop()
+            self.stop(send_email=True)
 
         try:
             price = self.soup.select(

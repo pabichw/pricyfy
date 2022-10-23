@@ -10,6 +10,7 @@ class EmailTemplates(Enum):
     TEST = 0
     PRICE_CHANGE = 1
     WATCH_STARTED = 2
+    WATCH_CANCELLED = 3
 
 
 class Sender:
@@ -31,11 +32,15 @@ class Sender:
 
             msg = MIMEText(f"""Price of {variables.get('prod_title', None)} has just went down to 
                             {str(variables.get('price', None))}\n\nThere is a direct link: {variables.get('url', None)}\n\nLast price: {str(variables.get('last_price', None))}\nChange: {round(change, 2)}%""")
-            msg['Subject'] = f"""Subject: 💹 Price of {variables.get('prod_title', None)}  went down!"""
+            msg['Subject'] = f"""💹 Price of {variables.get('prod_title', None)}  went down!"""
         elif type is EmailTemplates.WATCH_STARTED:
             msg = MIMEText(
                 f"""Watching offer {variables.get('url', None)} has started. You will be notified once the price has changed!\n\nInitial price: {variables.get('threshold_price', None)}""")
-            msg['Subject'] = f"""Subject: ℹ️ Watching has started!"""
+            msg['Subject'] = f"""ℹ️ Watching has !"""
+        elif type is EmailTemplates.WATCH_CANCELLED:
+            msg = MIMEText(
+                f"""Watching offer {variables.get('url', None)} has cancelled. Likely the offer has expired or been .\n\nLast found price: {variables.get('last_price', None)}""")
+            msg['Subject'] = f"""🛑 Watching has been aborted!"""
         else:
             msg = MIMEText(
                 """Unrecognized email template. Please notify development team""")

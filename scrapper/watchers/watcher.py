@@ -99,8 +99,21 @@ class Watcher(Thread):
         db.get_db()['products'].update_one(
             {"url": self.url}, {"$set": {'product_id': product_id}})
 
-    def stop(self):
+    def stop(self, send_email=False):
         '''stops thread'''
 
         print('Stopping: ', self.url)
+
+        db_product = db.get_db()['products'].find_one(
+            {"url":  self.url})
+
+        if send_email:
+            print('Sending abort mail...')
+
+            Sender.send_mail(
+                variables={'url': self.url,
+                           'last_price': db_product.get('last_found_price')},
+                to=db_product.get('recipients', []),
+                type=EmailTemplates.WATCH_CANCELLED)
+
         self.stopped.set()
