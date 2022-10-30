@@ -21,4 +21,4 @@ class MediaExpertWatcher(Watcher):
 
         print('[', datetime.datetime.now(), ']', ' MediaExpert ',
               prod_title, ' : ', price_parsed, ' need: ', self.price)
-        self.send_if_fulfilled(price_parsed, prod_title)
+        self.check_notify(price_parsed, prod_title)

@@ -42,7 +42,7 @@ def watch(url, price):
     # elif domain == SHOPS_DOMAINS.KOMPUTRONIK:
         # threadHandler = KomputronikWatcher(stop_flag, URL, price)
     else:
-        print('Platform not supported: ', domain)
+        print('[WARN] Platform not supported: ', domain)
         return
     thread_handler.start()
 

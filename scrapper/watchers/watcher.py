@@ -53,13 +53,13 @@ class Watcher(Thread):
                 print('ARGHH!', exception,
                       '\nBut I will keep cracking chief! (＠＾◡＾)')
 
-    def send_if_fulfilled(self, price_parsed, prod_title):
+    def check_notify(self, price_parsed, prod_title):
         # TODO: divide check and send
         '''Decide if condition fulfilled (to be moved) and send email'''
 
         db_product = ProductUtil.get_db_entity({"url":  self.url})
 
-        if price_parsed < ProductUtil.get_current_price(db_product):
+        if self.check_notify_requirements(data={'price_parsed': price_parsed, 'db_product': db_product}):
             print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
 
             Sender.send_mail(
@@ -74,9 +74,7 @@ class Watcher(Thread):
 
             # time.sleep(SLEEP_AFTER_SEND)
 
-        db.get_db()['products'].update_one(
-            {"product_id": self.product_id}, {"$set": {'last_found_price': price_parsed}})
-
+        self.update_last_price(price_parsed)
     def scrap(self):
         '''overloaded in site-specific watchers'''
         pass
@@ -96,6 +94,18 @@ class Watcher(Thread):
 
         db.get_db()['products'].update_one(
             {"url": self.url}, {"$set": {'product_id': product_id}})
+
+    def check_notify_requirements(self, data={}):
+        '''checks for notify requirements. Can be overriden by specific watcher method'''
+
+        return data.get('price_parsed') < ProductUtil.get_current_price(data.get('db_product'))
+
+    def update_last_price(self, price):
+        '''updates last price'''
+
+        # update self.price also?
+        db.get_db()['products'].update_one(
+            {"product_id": self.product_id}, {"$set": {'last_found_price': price}})
 
     def stop(self, send_email=False):
         '''stops thread'''

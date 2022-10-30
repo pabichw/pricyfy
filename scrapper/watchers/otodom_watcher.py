@@ -54,4 +54,4 @@ class OtodomWatcher(Watcher):
             'parse_time': parse_time
         })
 
-        self.send_if_fulfilled(price_parsed, prod_title)
+        self.check_notify(price_parsed, prod_title)
