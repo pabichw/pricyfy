@@ -2,13 +2,13 @@
 import datetime
 from watchers.watcher import Watcher, NoElemFoundExcpetion
 from db import db
-
+from utils.product import ProductUtil
 
 class OlxWatcher(Watcher):
     '''Olx watcher'''
 
     def __init__(self, event, URL, price):
-        Watcher.__init__(self, event, URL, price)
+        Watcher.__init__(self, event, URL)
         print('[INFO] Starting Olx watcher:\n URL: ',
               URL, '\n Threshold price: ', price)
 
@@ -39,8 +39,9 @@ class OlxWatcher(Watcher):
 
         parse_time = datetime.datetime.now()
 
-        print('[', parse_time, ']', ' Olx.pl: ',
-              prod_title, ' : ', price_parsed, ' threshold: ', self.price)
+        db_product = ProductUtil.get_db_entity({"url":  self.url})
+        
+        print('[', parse_time, ']', ' Olx.pl: ', prod_title, ' : ', price_parsed, ' threshold: ', ProductUtil.get_current_price(db_product))
 
         # TODO: extract to Watcher.py
         history_collection = db.get_db()['history']
@@ -48,7 +49,7 @@ class OlxWatcher(Watcher):
             'product_id': self.product_id,
             'product_title': prod_title,
             'price_parsed': price_parsed,
-            'price_threshold': self.price,
+            'price_threshold': db_product.get('threshold', None),
             'parse_time': parse_time
         })
 

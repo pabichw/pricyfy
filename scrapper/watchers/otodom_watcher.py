@@ -1,5 +1,6 @@
 '''Otodom watcher module'''
 import datetime
+from utils.product import ProductUtil
 from watchers.watcher import Watcher, NoElemFoundExcpetion
 from db import db
 
@@ -8,7 +9,7 @@ class OtodomWatcher(Watcher):
     '''Otodom watcher'''
 
     def __init__(self, event, URL, price):
-        Watcher.__init__(self, event, URL, price)
+        Watcher.__init__(self, event, URL)
         print('[INFO] Starting OtoDom watcher:\n URL: ',
               URL, '\n Threshold price: ', price)
 
@@ -39,8 +40,10 @@ class OtodomWatcher(Watcher):
 
         parse_time = datetime.datetime.now()
 
+        db_product = ProductUtil.get_db_entity({"url":  self.url})
+
         print('[', parse_time, ']', ' Otodom.pl: ',
-              prod_title, ' : ', price_parsed, ' threshold: ', self.price)
+              prod_title, ' : ', price_parsed, ' threshold: ', ProductUtil.get_current_price(db_product))
 
         history_collection = db.get_db()['history']
         history_collection.insert_one({

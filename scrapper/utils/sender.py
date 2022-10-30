@@ -36,10 +36,10 @@ class Sender:
         elif type is EmailTemplates.WATCH_STARTED:
             msg = MIMEText(
                 f"""Watching offer {variables.get('url', None)} has started. You will be notified once the price has changed!\n\nInitial price: {variables.get('threshold_price', None)}""")
-            msg['Subject'] = f"""ℹ️ Watching has !"""
+            msg['Subject'] = f"""ℹ️ Watching has started!"""
         elif type is EmailTemplates.WATCH_CANCELLED:
             msg = MIMEText(
-                f"""Watching offer {variables.get('url', None)} has cancelled. Likely the offer has expired or been .\n\nLast found price: {variables.get('last_price', None)}""")
+                f"""Watching offer {variables.get('url', None)} has cancelled. Likely the offer has expired or been archived.\n\nLast found price: {variables.get('last_price', None)}""")
             msg['Subject'] = f"""🛑 Watching has been aborted!"""
         else:
             msg = MIMEText(

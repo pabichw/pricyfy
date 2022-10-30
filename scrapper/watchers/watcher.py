@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from const.options import SCRAPPING_INTERVAL_SECONDS
 from db import db
 from utils.sender import EmailTemplates, Sender
+from utils.product import ProductUtil
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
@@ -26,19 +27,18 @@ class NoElemFoundExcpetion(Error):
 class Watcher(Thread):
     '''Generic class to handle generic watcher problems. It should extend other, more site-specific watchers.'''
 
-    price = 0
     soup = None
     stopped = None
     URL = None
 
-    def __init__(self, event, URL, price):
+    def __init__(self, event, URL):
         Thread.__init__(self)
         self.stopped = event
-        self.price = price
         self.product_id = None
         self.url = URL
 
-        db_product = db.get_db()['products'].find_one({"url":  URL})
+        db_product = ProductUtil.get_db_entity({"url": self.url})
+
         if db_product.get('status', None) == 'INACTIVE':
             self.stop()
 
@@ -57,23 +57,21 @@ class Watcher(Thread):
         # TODO: divide check and send
         '''Decide if condition fulfilled (to be moved) and send email'''
 
-        if price_parsed < self.price:
-            print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
+        db_product = ProductUtil.get_db_entity({"url":  self.url})
 
-            db_product = db.get_db()['products'].find_one(
-                {"url":  self.url})
+        if price_parsed < ProductUtil.get_current_price(db_product):
+            print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
 
             Sender.send_mail(
                 variables={
                     'prod_title': prod_title,
-                    'last_price': self.price,
+                    'last_price': db_product.get('last_found_price', None),
                     'url': self.url,
                     'price': price_parsed,
                 },
                 to=db_product.get('recipients', []),
                 type=EmailTemplates.PRICE_CHANGE)
 
-            self.price = price_parsed
             # time.sleep(SLEEP_AFTER_SEND)
 
         db.get_db()['products'].update_one(
@@ -104,8 +102,7 @@ class Watcher(Thread):
 
         print('Stopping: ', self.url)
 
-        db_product = db.get_db()['products'].find_one(
-            {"url":  self.url})
+        db_product = ProductUtil.get_db_entity({"url":  self.url})
 
         if send_email:
             print('Sending abort mail...')
