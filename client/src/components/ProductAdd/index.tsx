@@ -1,37 +1,50 @@
 import postProductWatch from 'api/postProduct'
 import Button from 'components/_atoms/Button'
 import Field from 'components/_atoms/Field'
+import Icon from 'components/_atoms/Icon'
+import Check from 'components/__icons/Check/index'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import toast  from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
-interface TForm { url: string, threshold_price: string, code: string, email: string }
+interface TForm {
+	url: string
+	threshold_price: string
+	code: string
+	email: string
+}
 
 enum STEPS {
 	FIRST,
 	SECOND,
-	THIRD
+	THIRD,
+	FOURTH
 }
 
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-const SUCCESS_HTTP_CODES = new Set([200, 201]);
+const SUCCESS_HTTP_CODES = new Set([200, 201])
 
-const notifyAdded = (): void => { toast.success('Added successfully!') }
-const notifyError = (message: string): void => { toast.error(`Error: ${message}`) };
-
-const showNotification = (data: { status: number, error: { msg: string } }): void => {
-	// TODO: move to global request 'interceptor' 
-	if (SUCCESS_HTTP_CODES.has(data.status)) {
-		notifyAdded();
-	} else {
-		notifyError(data.error.msg)
-	}
+const notifyError = (message: string): void => {
+	toast.error(`Error: ${message}`)
 }
+
 function ProductAdd(): JSX.Element {
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [step, setStep] = useState<STEPS>(STEPS.FIRST)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [step, setStep] = useState<STEPS>(STEPS.FOURTH)
 
 	const { register, handleSubmit } = useForm<TForm>()
+
+	const handleResponse = (data: {
+		status: number
+		error: { msg: string }
+	}): void => {
+		// TODO: move to global request 'interceptor'
+		if (SUCCESS_HTTP_CODES.has(data.status)) {
+			setStep(STEPS.FOURTH)
+		} else {
+			notifyError(data.error.msg)
+		}
+	}
 
 	const onSubmit = async (data: TForm): Promise<void> => {
 		setIsLoading(true)
@@ -41,8 +54,8 @@ function ProductAdd(): JSX.Element {
 			token: data.code,
 			email: data.email
 		})
-		.then(showNotification)
-		.finally(() => setIsLoading(false))
+			.then(handleResponse)
+			.finally(() => setIsLoading(false))
 	}
 
 	return (
@@ -67,7 +80,13 @@ function ProductAdd(): JSX.Element {
 			)}
 			{step === STEPS.SECOND && (
 				<>
-					<Field name='email' label='Email' type='email' required register={register} />
+					<Field
+						name='email'
+						label='Email'
+						type='email'
+						required
+						register={register}
+					/>
 					<div className='mt-5'>
 						<Button onClick={(): void => setStep(STEPS.THIRD)}>Confirm</Button>
 					</div>
@@ -75,9 +94,22 @@ function ProductAdd(): JSX.Element {
 			)}
 			{step === STEPS.THIRD && (
 				<>
-					<Field name='code' label='Code' register={register} />
+					<Field name='code' label='code' register={register} />
 					<div className='mt-5'>
-						<Button type='submit'>{ isLoading? 'Loading...' : 'Submit' }</Button>
+						<Button type='submit'>{isLoading ? 'loading...' : 'submit'}</Button>
+					</div>
+				</>
+			)}
+			{step === STEPS.FOURTH && (
+				<>
+					<Icon>
+						<Check />
+					</Icon>
+					<p className='text-m mt-1 text-center font-bold text-gray-900'>
+						All done
+					</p>
+					<div className='mt-5'>
+						<Button onClick={() => setStep(STEPS.FIRST)}>Add another</Button>
 					</div>
 				</>
 			)}
