@@ -1,16 +1,14 @@
 interface Properties extends React.HTMLProps<HTMLInputElement> {
-	height?: number
-	width?: number
+	scale?: number
 }
 
-function Icon({
-	children,
-	height = 24,
-	width = 24,
-	...props
-}: Properties): JSX.Element {
+function Icon({ children, scale = 1, ...props }: Properties): JSX.Element {
 	return (
-		<span style={{ height, width }} {...props}>
+		<span
+			className='inline-block'
+			style={{ transform: `scale(${scale})` }}
+			{...props}
+		>
 			{children}
 		</span>
 	)

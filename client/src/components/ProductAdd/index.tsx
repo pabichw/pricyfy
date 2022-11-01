@@ -97,19 +97,19 @@ function ProductAdd(): JSX.Element {
 			{step === STEPS.THIRD && (
 				<>
 					<fieldset className='united-borders'>
-						<Field name='code' label='code' register={register} />
+						<Field name='code' label='Code' register={register} />
 					</fieldset>
 					<div className='mt-5'>
-						<Button type='submit'>{isLoading ? 'loading...' : 'submit'}</Button>
+						<Button type='submit'>{isLoading ? 'Loading...' : 'submit'}</Button>
 					</div>
 				</>
 			)}
 			{step === STEPS.FOURTH && (
 				<>
-					<Icon>
+					<Icon scale={0.7}>
 						<Check />
 					</Icon>
-					<p className='text-m mt-1 text-center font-bold text-gray-900'>
+					<p className='text-m mt-1 text-center font-bold text-gray-700'>
 						All done
 					</p>
 					<div className='mt-5'>
