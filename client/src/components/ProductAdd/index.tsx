@@ -30,7 +30,7 @@ const notifyError = (message: string): void => {
 
 function ProductAdd(): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false)
-	const [step, setStep] = useState<STEPS>(STEPS.FOURTH)
+	const [step, setStep] = useState<STEPS>(STEPS.FIRST)
 
 	const { register, handleSubmit } = useForm<TForm>()
 
@@ -80,13 +80,15 @@ function ProductAdd(): JSX.Element {
 			)}
 			{step === STEPS.SECOND && (
 				<>
-					<Field
-						name='email'
-						label='Email'
-						type='email'
-						required
-						register={register}
-					/>
+					<fieldset className='united-borders'>
+						<Field
+							name='email'
+							label='Email'
+							type='email'
+							required
+							register={register}
+						/>
+					</fieldset>
 					<div className='mt-5'>
 						<Button onClick={(): void => setStep(STEPS.THIRD)}>Confirm</Button>
 					</div>
@@ -94,7 +96,9 @@ function ProductAdd(): JSX.Element {
 			)}
 			{step === STEPS.THIRD && (
 				<>
-					<Field name='code' label='code' register={register} />
+					<fieldset className='united-borders'>
+						<Field name='code' label='code' register={register} />
+					</fieldset>
 					<div className='mt-5'>
 						<Button type='submit'>{isLoading ? 'loading...' : 'submit'}</Button>
 					</div>
