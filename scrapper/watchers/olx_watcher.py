@@ -15,6 +15,8 @@ class OlxWatcher(Watcher):
     def scrap(self):
         '''Do site-specific scrapping'''
 
+        self.get_page()
+
         if self.product_id is None:
             self.product_id = self.url.rsplit('/', 1)[-1].replace('.html', '')
             self.add_product_id(product_id=self.product_id)

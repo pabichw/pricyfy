@@ -42,9 +42,6 @@ class Watcher(Thread):
         if db_product.get('status', None) == 'INACTIVE':
             self.stop()
 
-        page = requests.get(URL, headers=headers)
-        self.soup = BeautifulSoup(page.content, 'lxml')
-
     def run(self):
         while not self.stopped.wait(SCRAPPING_INTERVAL_SECONDS):
             try:
@@ -52,6 +49,10 @@ class Watcher(Thread):
             except NoElemFoundExcpetion as exception:
                 print('ARGHH!', exception,
                       '\nBut I will keep cracking chief! (＠＾◡＾)')
+
+    def get_page(self):
+        page = requests.get(self.url, headers=headers)
+        self.soup = BeautifulSoup(page.content, 'lxml')
 
     def check_notify(self, price_parsed, prod_title):
         # TODO: divide check and send
@@ -65,7 +66,7 @@ class Watcher(Thread):
             Sender.send_mail(
                 variables={
                     'prod_title': prod_title,
-                    'last_price': db_product.get('last_found_price', None),
+                    'last_price': ProductUtil.get_current_price(db_product),
                     'url': self.url,
                     'price': price_parsed,
                 },
