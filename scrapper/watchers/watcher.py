@@ -51,6 +51,8 @@ class Watcher(Thread):
                       '\nBut I will keep cracking chief! (＠＾◡＾)')
 
     def get_page(self):
+        '''get content of a page'''
+
         page = requests.get(self.url, headers=headers)
         self.soup = BeautifulSoup(page.content, 'lxml')
 
@@ -78,6 +80,7 @@ class Watcher(Thread):
         self.update_last_price(price_parsed)
     def scrap(self):
         '''overloaded in site-specific watchers'''
+        self.get_page()
         pass
 
     def check_inactive(self):
@@ -113,14 +116,14 @@ class Watcher(Thread):
 
         print('Stopping: ', self.url)
 
-        db_product = ProductUtil.get_db_entity({"url":  self.url})
-
         if send_email:
             print('Sending abort mail...')
+            
+            db_product = ProductUtil.get_db_entity({"url":  self.url})
 
             Sender.send_mail(
                 variables={'url': self.url,
-                           'last_price': db_product.get('last_found_price')},
+                           'last_price': ProductUtil.get_current_price(db_product)},
                 to=db_product.get('recipients', []),
                 type=EmailTemplates.WATCH_CANCELLED)
 

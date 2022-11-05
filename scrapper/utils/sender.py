@@ -27,11 +27,11 @@ class Sender:
                 f"""⚠️ TEST ⚠️\nęśąćż\nLorem ipsum doret emet? Emet!""")
             msg['Subject'] = f"""Email service testing"""
         elif type is EmailTemplates.PRICE_CHANGE:
-            change = get_change(variables.get('threshold_price', 0),
+            change = get_change(variables.get('price', 0),
                                 variables.get('last_price', 0))
 
             msg = MIMEText(f"""Price of {variables.get('prod_title', None)} has just went down to 
-                            {str(variables.get('threshold_price', None))}\n\nThere is a direct link: {variables.get('url', None)}\n\nLast price: {str(variables.get('last_price', None))}\nChange: {round(change, 2)}%""")
+                            {str(variables.get('price', None))}\n\nThere is a direct link: {variables.get('url', None)}\n\nLast price: {str(variables.get('last_price', None))}\nChange: {round(change, 2)}%""")
             msg['Subject'] = f"""💹 Price of {variables.get('prod_title', None)}  went down!"""
         elif type is EmailTemplates.WATCH_STARTED:
             msg = MIMEText(
