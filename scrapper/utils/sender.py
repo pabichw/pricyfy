@@ -8,9 +8,10 @@ from utils.calc import get_change
 
 class EmailTemplates(Enum):
     TEST = 0
-    PRICE_CHANGE = 1
-    WATCH_STARTED = 2
-    WATCH_CANCELLED = 3
+    PRICE_RAISE = 1
+    PRICE_DROP = 2
+    WATCH_STARTED = 3
+    WATCH_CANCELLED = 4
 
 
 class Sender:
@@ -26,13 +27,20 @@ class Sender:
             msg = MIMEText(
                 f"""⚠️ TEST ⚠️\nęśąćż\nLorem ipsum doret emet? Emet!""")
             msg['Subject'] = f"""Email service testing"""
-        elif type is EmailTemplates.PRICE_CHANGE:
+        elif type is EmailTemplates.PRICE_RAISE:
+            change = get_change(variables.get('price', 0),
+                                variables.get('last_price', 0))
+
+            msg = MIMEText(f"""Price of {variables.get('prod_title', None)} has just raised to 
+                            {str(variables.get('price', None))}\n\nThere is a direct link: {variables.get('url', None)}\n\nLast price: {str(variables.get('last_price', None))}\nChange: {round(change, 2)}%""")
+            msg['Subject'] = f"""🔺 Price of {variables.get('prod_title', None)} has raised!"""
+        elif type is EmailTemplates.PRICE_DROP:
             change = get_change(variables.get('price', 0),
                                 variables.get('last_price', 0))
 
             msg = MIMEText(f"""Price of {variables.get('prod_title', None)} has just went down to 
                             {str(variables.get('price', None))}\n\nThere is a direct link: {variables.get('url', None)}\n\nLast price: {str(variables.get('last_price', None))}\nChange: {round(change, 2)}%""")
-            msg['Subject'] = f"""💹 Price of {variables.get('prod_title', None)}  went down!"""
+            msg['Subject'] = f"""💹 Price of {variables.get('prod_title', None)} went down!"""
         elif type is EmailTemplates.WATCH_STARTED:
             msg = MIMEText(
                 f"""Watching offer {variables.get('url', None)} has started. You will be notified once the price has changed!\n\nInitial price: {variables.get('threshold_price', None)}""")
@@ -51,7 +59,7 @@ class Sender:
     def send_mail(
             variables={},
             to=[],
-            type=EmailTemplates.PRICE_CHANGE):
+            type=''):
         '''send mail'''
         server = smtplib.SMTP(os.environ.get("SMTP_HOST"), 587)
         server.ehlo()

@@ -62,8 +62,8 @@ class Watcher(Thread):
 
         db_product = ProductUtil.get_db_entity({"url":  self.url})
 
-        if self.check_notify_requirements(data={'price_parsed': price_parsed, 'db_product': db_product}):
-            print('[INFO] Sending email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
+        if self.check_drop_requirements(data={'price_parsed': price_parsed, 'db_product': db_product}):
+            print('[INFO] Sending price drop email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
 
             Sender.send_mail(
                 variables={
@@ -73,11 +73,23 @@ class Watcher(Thread):
                     'price': price_parsed,
                 },
                 to=db_product.get('recipients', []),
-                type=EmailTemplates.PRICE_CHANGE)
+                type=EmailTemplates.PRICE_DROP)
 
-            # time.sleep(SLEEP_AFTER_SEND)
+        elif self.check_raise_requirements(data={'price_parsed': price_parsed, 'db_product': db_product}):
+            print('[INFO] Sending price raise email :(')
+
+            Sender.send_mail(
+                variables={
+                    'prod_title': prod_title,
+                    'last_price': ProductUtil.get_current_price(db_product),
+                    'url': self.url,
+                    'price': price_parsed,
+                },
+                to=db_product.get('recipients', []),
+                type=EmailTemplates.PRICE_RAISE)
 
         self.update_last_price(price_parsed)
+
     def scrap(self):
         '''overloaded in site-specific watchers'''
         self.get_page()
@@ -99,10 +111,15 @@ class Watcher(Thread):
         db.get_db()['products'].update_one(
             {"url": self.url}, {"$set": {'product_id': product_id}})
 
-    def check_notify_requirements(self, data={}):
+    def check_drop_requirements(self, data={}):
         '''checks for notify requirements. Can be overriden by specific watcher method'''
 
         return data.get('price_parsed') < ProductUtil.get_current_price(data.get('db_product'))
+
+    def check_raise_requirements(self, data={}):
+        '''checks for notify requirements. Can be overriden by specific watcher method'''
+
+        return data.get('price_parsed') > ProductUtil.get_current_price(data.get('db_product'))
 
     def update_last_price(self, price):
         '''updates last price'''
