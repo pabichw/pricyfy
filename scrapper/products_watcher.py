@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv, find_dotenv
 
 from const.shops_domains import ShopDomains
-from const.options import QUEUE_BROWSING_INTERVAL
+from const.options import CREATE_STATISTICS_INTERVAL,  QUEUE_BROWSING_INTERVAL
 from models.product import Product
 from utils.sender import EmailTemplates, Sender
 from watchers.amazon_watcher import AmazonWatcher
@@ -17,6 +17,8 @@ from watchers.olx_watcher import OlxWatcher
 from utils.logger import Logger
 from db import db
 from utils.threading import set_interval
+from utils.product import ProductUtil
+from datetime import datetime
 
 PRODUCTS_TO_WATCH = []
 
@@ -71,6 +73,26 @@ def watch_products_queue():
                 },
                 to=waiting_product['recipients'],
                 type=EmailTemplates.WATCH_STARTED)
+    start()
+    set_interval(start, CREATE_STATISTICS_INTERVAL)
+
+
+def create_statistics():
+    def start():
+        print('[Stats] Creating stats...')
+
+        products = db.get_db()['products']
+
+        data = {}
+        data['created_at'] = datetime.now()
+        
+        # products count
+        data['count'] = products.count_documents({})
+
+        db.get_db()['statistics'].insert_one(data)
+
+        print('[Stats] Created: ', data)
+
     start()
     set_interval(start, QUEUE_BROWSING_INTERVAL)
 
@@ -140,6 +162,7 @@ if __name__ == "__main__":
         load_products()
         list(map(lambda product: watch(
             product.url,
-            db.get_db()['products'].find_one({'url': product.url}).get('last_found_price', None) or product.price), PRODUCTS_TO_WATCH))
+            ProductUtil.get_current_price(db.get_db()['products'].find_one({'url': product.url}))), PRODUCTS_TO_WATCH))
 
         watch_products_queue()
+        create_statistics()
