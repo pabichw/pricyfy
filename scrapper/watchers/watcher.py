@@ -8,6 +8,9 @@ from const.options import SCRAPPING_INTERVAL_SECONDS
 from db import db
 from utils.sender import EmailTemplates, Sender
 from utils.product import ProductUtil
+from sel import sel
+import os
+from selenium.webdriver.common.by import By
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
@@ -41,6 +44,12 @@ class Watcher(Thread):
 
         if db_product.get('status', None) == 'INACTIVE':
             self.stop()
+        else:
+            try:
+                self.take_screenshot()
+            except:
+                print(
+                    f'[WARN] Unable to take screenshot for {self.url}')
 
     def run(self):
         while not self.stopped.wait(SCRAPPING_INTERVAL_SECONDS):
@@ -128,6 +137,27 @@ class Watcher(Thread):
         db.get_db()['products'].update_one(
             {"product_id": self.product_id}, {"$set": {'last_found_price': price}})
 
+    def take_screenshot(self):
+        '''takes screenshot of an offer'''
+
+        driver = sel.get_selenium()
+        driver.get(self.url)
+        id = ProductUtil.get_db_entity({"url": self.url}).get('product_id')
+
+        print(f'Screenshot: {id}')
+
+        # delete onetrust node onetrust-consent-sdk TODO: extract to OLX
+        # NOTE: dla otodom jest inny id "_next"
+        one_trust = driver.find_element(By.ID, 'onetrust-consent-sdk')
+        if one_trust:
+            driver.execute_script("""
+            var element = arguments[0];
+            element.parentNode.removeChild(element);
+            """, one_trust)
+
+        driver.find_element(By.TAG_NAME, 'body').screenshot(
+            os.getcwd() + f'/screenshots/{id}.png')
+
     def stop(self, send_email=False):
         '''stops thread'''
 
@@ -135,7 +165,7 @@ class Watcher(Thread):
 
         if send_email:
             print('Sending abort mail...')
-            
+
             db_product = ProductUtil.get_db_entity({"url":  self.url})
 
             Sender.send_mail(

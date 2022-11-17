@@ -10,7 +10,6 @@ from const.shops_domains import ShopDomains
 from const.options import CREATE_STATISTICS_INTERVAL,  QUEUE_BROWSING_INTERVAL
 from models.product import Product
 from utils.sender import EmailTemplates, Sender
-from watchers.amazon_watcher import AmazonWatcher
 from watchers.media_expert_watcher import MediaExpertWatcher
 from watchers.otodom_watcher import OtodomWatcher
 from watchers.olx_watcher import OlxWatcher
@@ -31,9 +30,7 @@ def watch(url, price):
 
     thread_handler = Thread()
 
-    if domain == ShopDomains.AMAZON:
-        thread_handler = AmazonWatcher(stop_flag, url, price)
-    elif domain == ShopDomains.MEDIA_EXPERT:
+    if domain == ShopDomains.MEDIA_EXPERT:
         thread_handler = MediaExpertWatcher(stop_flag, url, price)
     elif domain == ShopDomains.OTO_DOM:
         thread_handler = OtodomWatcher(stop_flag, url, price)
