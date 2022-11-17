@@ -17,10 +17,6 @@ class OlxWatcher(Watcher):
 
         super().scrap();
 
-        if self.product_id is None:
-            self.product_id = self.url.rsplit('/', 1)[-1].replace('.html', '')
-            self.add_product_id(product_id=self.product_id)
-
         try:
             prod_title = self.soup.find(
                 'h1', {"data-cy": "ad_title"}).get_text().strip()

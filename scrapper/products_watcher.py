@@ -10,6 +10,7 @@ from const.shops_domains import ShopDomains
 from const.options import CREATE_STATISTICS_INTERVAL,  QUEUE_BROWSING_INTERVAL
 from models.product import Product
 from utils.sender import EmailTemplates, Sender
+from watchers.watcher import Watcher
 from watchers.amazon_watcher import AmazonWatcher
 from watchers.media_expert_watcher import MediaExpertWatcher
 from watchers.otodom_watcher import OtodomWatcher
@@ -58,11 +59,21 @@ def watch_products_queue():
             print(
                 f"-- Adding: {waiting_product['url']} : {waiting_product['threshold_price']} : {waiting_product['threshold_price']}")
 
-            # TODO: update if exists (also handle if email exists)
+            product_id = Watcher.create_id(waiting_product['url'])
 
-            db.get_db()['products'].insert_one(
-                {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients']})
-            watch(waiting_product['url'], waiting_product['threshold_price'])
+            if db.get_db()['products'].count_documents({'product_id': product_id}) != 0:
+                print(
+                    f'Product already exists {product_id} Simply adding recipients: {waiting_product["recipients"]}')
+                # TODO: handle email already a recipient and Product exists but INACTIVE
+
+                db.get_db()['products'].update_one({"product_id": product_id}, {
+                    "$push": {'recipients': {'$each': waiting_product['recipients']}}})
+            else:
+                db.get_db()['products'].insert_one(
+                    {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients']})
+                watch(waiting_product['url'],
+                      waiting_product['threshold_price'])
+
             db.get_db()['products_queue'].delete_one(
                 {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
 
@@ -74,18 +85,16 @@ def watch_products_queue():
                 to=waiting_product['recipients'],
                 type=EmailTemplates.WATCH_STARTED)
     start()
-    set_interval(start, CREATE_STATISTICS_INTERVAL)
+    set_interval(start, QUEUE_BROWSING_INTERVAL)
 
 
 def create_statistics():
     def start():
-        print('[Stats] Creating stats...')
-
         products = db.get_db()['products']
 
         data = {}
         data['created_at'] = datetime.now()
-        
+
         # products count
         data['count'] = products.count_documents({})
 
@@ -94,7 +103,7 @@ def create_statistics():
         print('[Stats] Created: ', data)
 
     start()
-    set_interval(start, QUEUE_BROWSING_INTERVAL)
+    set_interval(start, CREATE_STATISTICS_INTERVAL)
 
 
 def test_database():

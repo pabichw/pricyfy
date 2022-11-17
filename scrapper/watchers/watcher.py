@@ -38,6 +38,7 @@ class Watcher(Thread):
         self.url = URL
 
         db_product = ProductUtil.get_db_entity({"url": self.url})
+        self.add_product_id(product_id=Watcher.create_id(self.url))
 
         if db_product.get('status', None) == 'INACTIVE':
             self.stop()
@@ -120,6 +121,10 @@ class Watcher(Thread):
         '''checks for notify requirements. Can be overriden by specific watcher method'''
 
         return data.get('price_parsed') > ProductUtil.get_current_price(data.get('db_product'))
+
+    @staticmethod
+    def create_id(url):
+        return url.rsplit('/', 1)[-1].replace('.html', '')
 
     def update_last_price(self, price):
         '''updates last price'''

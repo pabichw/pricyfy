@@ -86,6 +86,7 @@ SMTP_PASS='YourPassword'
 - handle multiple email receipants
 - refactor watchers - extract to generic watcher
 - extract timestamp factory
+- abandon 'threshold_price' (react on whatever price change from now on)
 
 ## Issues
 
