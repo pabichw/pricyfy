@@ -4,6 +4,7 @@ from watchers.watcher import Watcher, NoElemFoundExcpetion
 from db import db
 from utils.product import ProductUtil
 
+
 class OlxWatcher(Watcher):
     '''Olx watcher'''
 
@@ -15,7 +16,7 @@ class OlxWatcher(Watcher):
     def scrap(self):
         '''Do site-specific scrapping'''
 
-        super().scrap();
+        super().scrap()
 
         try:
             prod_title = self.soup.find(
@@ -37,9 +38,11 @@ class OlxWatcher(Watcher):
 
         parse_time = datetime.datetime.now()
 
-        db_product = ProductUtil.get_db_entity({"url":  self.url})
-        
-        print('[', parse_time, ']', ' Olx.pl: ', prod_title, ' : ', price_parsed, ' threshold: ', ProductUtil.get_current_price(db_product))
+        db_product = ProductUtil.get_db_entity(
+            {"product_id":  self.product_id})
+
+        print('[', parse_time, ']', ' Olx.pl: ', prod_title, ' : ', price_parsed,
+              ' threshold: ', ProductUtil.get_current_price(db_product))
 
         # TODO: extract to Watcher.py
         history_collection = db.get_db()['history']
@@ -47,7 +50,7 @@ class OlxWatcher(Watcher):
             'product_id': self.product_id,
             'product_title': prod_title,
             'price_parsed': price_parsed,
-            'price_threshold': db_product.get('threshold', None),
+            'price_threshold': db_product.get('threshold_price', None),
             'parse_time': parse_time
         })
 

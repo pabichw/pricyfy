@@ -38,7 +38,11 @@ class OtodomWatcher(Watcher):
 
         parse_time = datetime.datetime.now()
 
-        db_product = ProductUtil.get_db_entity({"url":  self.url})
+        db_product = ProductUtil.get_db_entity(
+            {"product_id":  self.product_id})
+
+        print('[', parse_time, ']', ' Olx.pl: ', prod_title, ' : ', price_parsed,
+              ' threshold: ', ProductUtil.get_current_price(db_product))
 
         print('[', parse_time, ']', ' Otodom.pl: ',
               prod_title, ' : ', price_parsed, ' threshold: ', ProductUtil.get_current_price(db_product))
@@ -48,7 +52,7 @@ class OtodomWatcher(Watcher):
             'product_id': self.product_id,
             'product_title': prod_title,
             'price_parsed': price_parsed,
-            'price_threshold': db_product.get('threshold', None),
+            'price_threshold': db_product.get('threshold_price', None),
             'parse_time': parse_time
         })
 

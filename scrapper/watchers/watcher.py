@@ -27,6 +27,7 @@ class NoElemFoundExcpetion(Error):
 class Watcher(Thread):
     '''Generic class to handle generic watcher problems. It should extend other, more site-specific watchers.'''
 
+    product_id = None
     soup = None
     stopped = None
     URL = None
@@ -34,11 +35,20 @@ class Watcher(Thread):
     def __init__(self, event, URL):
         Thread.__init__(self)
         self.stopped = event
-        self.product_id = None
         self.url = URL
 
         db_product = ProductUtil.get_db_entity({"url": self.url})
-        self.add_product_id(product_id=Watcher.create_id(self.url))
+
+        print(
+            f'initing {self.url} product_id is {db_product.get("product_id", None)}')
+        if not db_product.get('product_id', None):
+            self.add_product_id(product_id=Watcher.create_id(self.url))
+
+        print('----product----')
+        print(ProductUtil.get_db_entity({"url": self.url}))
+
+        db_product = ProductUtil.get_db_entity({"url": self.url})  # refresh
+        self.product_id = db_product.get('product_id', None)
 
         if db_product.get('status', None) == 'INACTIVE':
             self.stop()
@@ -129,7 +139,8 @@ class Watcher(Thread):
     def update_last_price(self, price):
         '''updates last price'''
 
-        # update self.price also?
+        print(f'updating update_last_price {self.product_id} with {price}')
+
         db.get_db()['products'].update_one(
             {"product_id": self.product_id}, {"$set": {'last_found_price': price}})
 
@@ -140,7 +151,7 @@ class Watcher(Thread):
 
         if send_email:
             print('Sending abort mail...')
-            
+
             db_product = ProductUtil.get_db_entity({"url":  self.url})
 
             Sender.send_mail(
