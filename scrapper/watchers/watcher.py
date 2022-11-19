@@ -39,13 +39,8 @@ class Watcher(Thread):
 
         db_product = ProductUtil.get_db_entity({"url": self.url})
 
-        print(
-            f'initing {self.url} product_id is {db_product.get("product_id", None)}')
         if not db_product.get('product_id', None):
             self.add_product_id(product_id=Watcher.create_id(self.url))
-
-        print('----product----')
-        print(ProductUtil.get_db_entity({"url": self.url}))
 
         db_product = ProductUtil.get_db_entity({"url": self.url})  # refresh
         self.product_id = db_product.get('product_id', None)
@@ -138,8 +133,6 @@ class Watcher(Thread):
 
     def update_last_price(self, price):
         '''updates last price'''
-
-        print(f'updating update_last_price {self.product_id} with {price}')
 
         db.get_db()['products'].update_one(
             {"product_id": self.product_id}, {"$set": {'last_found_price': price}})
