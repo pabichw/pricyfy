@@ -8,6 +8,8 @@ from db import db
 class OtodomWatcher(Watcher):
     '''Otodom watcher'''
 
+    title = "OtoDom"
+
     def __init__(self, event, URL, price):
         Watcher.__init__(self, event, URL)
         print('[INFO] Starting OtoDom watcher:\n URL: ',
@@ -40,12 +42,6 @@ class OtodomWatcher(Watcher):
 
         db_product = ProductUtil.get_db_entity(
             {"product_id":  self.product_id})
-
-        print('[', parse_time, ']', ' Olx.pl: ', prod_title, ' : ', price_parsed,
-              ' threshold: ', ProductUtil.get_current_price(db_product))
-
-        print('[', parse_time, ']', ' Otodom.pl: ',
-              prod_title, ' : ', price_parsed, ' threshold: ', ProductUtil.get_current_price(db_product))
 
         history_collection = db.get_db()['history']
         history_collection.insert_one({

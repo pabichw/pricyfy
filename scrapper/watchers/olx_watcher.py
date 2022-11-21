@@ -7,7 +7,9 @@ from utils.product import ProductUtil
 
 class OlxWatcher(Watcher):
     '''Olx watcher'''
-
+    
+    title = 'OLX'
+    
     def __init__(self, event, URL, price):
         Watcher.__init__(self, event, URL)
         print('[INFO] Starting Olx watcher:\n URL: ',
@@ -40,9 +42,6 @@ class OlxWatcher(Watcher):
 
         db_product = ProductUtil.get_db_entity(
             {"product_id":  self.product_id})
-
-        print('[', parse_time, ']', ' Olx.pl: ', prod_title, ' : ', price_parsed,
-              ' threshold: ', ProductUtil.get_current_price(db_product))
 
         # TODO: extract to Watcher.py
         history_collection = db.get_db()['history']

@@ -1,6 +1,7 @@
 '''watcher module'''
 from threading import Thread
 
+import datetime
 import requests
 from bs4 import BeautifulSoup
 
@@ -66,7 +67,11 @@ class Watcher(Thread):
         # TODO: divide check and send
         '''Decide if condition fulfilled (to be moved) and send email'''
 
-        db_product = ProductUtil.get_db_entity({"url":  self.url})
+        db_product = ProductUtil.get_db_entity(
+            {"product_id":  self.product_id})
+
+        parse_time = datetime.datetime.now()
+        print(f'[{parse_time}]{self.title}: {prod_title} : {price_parsed} threshold: {ProductUtil.get_current_price(db_product)}')
 
         if self.check_drop_requirements(data={'price_parsed': price_parsed, 'db_product': db_product}):
             print('[INFO] Sending price drop email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
