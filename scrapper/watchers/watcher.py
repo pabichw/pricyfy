@@ -48,6 +48,9 @@ class Watcher(Thread):
 
         if db_product.get('status', None) == 'INACTIVE':
             self.stop()
+        else:
+            if not db_product.get('images', None):
+                self.collect_images()
 
     def run(self):
         while not self.stopped.wait(SCRAPPING_INTERVAL_SECONDS):
@@ -141,6 +144,10 @@ class Watcher(Thread):
 
         db.get_db()['products'].update_one(
             {"product_id": self.product_id}, {"$set": {'last_found_price': price}})
+
+    def collect_images(self):
+        '''collecting images'''
+        pass
 
     def stop(self, send_email=False):
         '''stops thread'''

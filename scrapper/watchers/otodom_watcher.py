@@ -33,7 +33,7 @@ class OtodomWatcher(Watcher):
             price = self.soup.find(
                 "strong", {"data-cy": "adPageHeaderPrice"}).get_text()
         except BaseException:
-            raise NoElemFoundExcpetion('Couldn\'t find price for', prod_title)
+            raise NoElemFoundExcpetion('Couldn\'t find price for', self.url)
 
         price = price.replace('zł', '').replace(' ', '')
         price_parsed = float(price)
@@ -53,3 +53,21 @@ class OtodomWatcher(Watcher):
         })
 
         self.check_notify(price_parsed, prod_title)
+
+    def collect_images(self):
+        print('Collecting images...')
+        super().scrap()
+
+        try:
+            images = self.soup.select(
+                'img', {'class': 'image-gallery-image'})
+
+            if images:
+                srcs = list(map(
+                    lambda img: img.get('src'), images))
+
+                db.get_db()['products'].update_one(
+                    {"product_id": self.product_id},
+                    {"$set": {'images': srcs}})
+        except BaseException:
+            print(f'Couldn\'t find images for {self.url}')
