@@ -47,7 +47,28 @@ class Sender:
             msg['Subject'] = f"""ℹ️ Watching has started!"""
         elif type is EmailTemplates.WATCH_CANCELLED:
             msg = MIMEText(
-                f"""Watching offer {variables.get('url', None)} has cancelled. Likely the offer has expired or been archived.\n\nLast found price: {variables.get('last_price', None)}""")
+                f"""
+                    <html>
+                    <head>
+                        <style>
+                            p {{
+                                font-size: 16px;
+                            }}
+                        </style>
+                    </head>
+                        <body>
+                            <p>
+                                Watching offer {variables.get('url', None)} has been cancelled. 
+                                Likely the offer has expired or been archived.
+                            </p>
+                            <br/>
+                            <p>
+                                Last found price: {variables.get('last_price', None)}
+                            </p>
+                            {'<br/>'.join(list(map(lambda src: f'<img src={src} width=500px/>', variables.get("images", []))))}
+                        </body>
+                    </html>
+                """, 'html')
             msg['Subject'] = f"""🛑 Watching has been aborted!"""
         else:
             msg = MIMEText(

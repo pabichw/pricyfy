@@ -161,7 +161,8 @@ class Watcher(Thread):
 
             Sender.send_mail(
                 variables={'url': self.url,
-                           'last_price': db_product.get('last_found_price')},
+                           'last_price': db_product.get('last_found_price'),
+                           'images': db_product.get('images')},
                 to=db_product.get('recipients', []),
                 type=EmailTemplates.WATCH_CANCELLED)
 
