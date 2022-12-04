@@ -21,14 +21,13 @@ class OlxWatcher(Watcher):
 
         super().scrap()
 
-        Logger.log(f'{datetime.datetime.now()}-{self.product_id}', self.soup)
-
         # TODO: extract collect data?
         try:
             prod_title = self.soup.find(
                 'h1', {"data-cy": "ad_title"}).get_text().strip()
         except BaseException:
             print(f'Couldn\'t find title for {self.url}')
+            Logger.log(f'ERR-SCRAP-{datetime.datetime.now()}-{self.product_id}', self.soup)
             self.mark_as_inactive()
             self.stop(send_email=True)
 
