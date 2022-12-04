@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv, find_dotenv
 
 from const.shops_domains import ShopDomains
-from const.options import CREATE_STATISTICS_INTERVAL,  QUEUE_BROWSING_INTERVAL
+from const.options import QUEUE_BROWSING_INTERVAL
 from models.product import Product
 from utils.sender import EmailTemplates, Sender
 from watchers.watcher import Watcher
@@ -18,8 +18,8 @@ from watchers.olx_watcher import OlxWatcher
 from utils.logger import Logger
 from db import db
 from utils.threading import set_interval
+from statistics import create_statistics
 from utils.product import ProductUtil
-from datetime import datetime
 
 PRODUCTS_TO_WATCH = []
 
@@ -86,25 +86,6 @@ def watch_products_queue():
                 type=EmailTemplates.WATCH_STARTED)
     start()
     set_interval(start, QUEUE_BROWSING_INTERVAL)
-
-
-def create_statistics():
-    def start():
-        products = db.get_db()['products']
-
-        data = {}
-        data['created_at'] = datetime.now()
-
-        # products count
-        data['count'] = products.count_documents({})
-
-        db.get_db()['statistics'].insert_one(data)
-
-        print('[Stats] Created: ', data)
-
-    start()
-    set_interval(start, CREATE_STATISTICS_INTERVAL)
-
 
 def test_database():
     '''test database connection'''
