@@ -6,7 +6,6 @@ class Logger:
     @staticmethod
     def log(id, content):
         '''log'''
-        print('Logging for ', id, 'content', content)
 
         try:
             with open(f'logs/{id}.txt', "a+") as myfile:

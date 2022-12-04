@@ -3,6 +3,7 @@ import datetime
 from watchers.watcher import Watcher, NoElemFoundExcpetion
 from db import db
 from utils.product import ProductUtil
+from utils.logger import Logger
 
 
 class OlxWatcher(Watcher):
@@ -19,6 +20,8 @@ class OlxWatcher(Watcher):
         '''Do site-specific scrapping'''
 
         super().scrap()
+
+        Logger.log(f'{datetime.datetime.now()}-{self.product_id}', self.soup)
 
         # TODO: extract collect data?
         try:
