@@ -27,7 +27,7 @@ class OlxWatcher(Watcher):
                 'h1', {"data-cy": "ad_title"}).get_text().strip()
         except BaseException:
             print(f'Couldn\'t find title for {self.url}')
-            Logger.log(f'ERR-SCRAP-{datetime.datetime.now()}-{self.product_id}', self.soup)
+            Logger.log(f'ERR-SCRAP-{datetime.datetime.now()}-{self.product_id}', self.soup, 'html')
             self.mark_as_inactive()
             self.stop(send_email=True)
 
