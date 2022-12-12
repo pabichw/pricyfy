@@ -7,7 +7,7 @@ interface TData {
 
 const ROOT_URL = import.meta.env.VITE_API_URL as string
 
-export default async function postProductWatch(
+export async function postProductWatch(
 	data: TData
 ): Promise<{ status: string; data: { msg: string }, error: { msg: string } }> {
 	const response = await fetch(`${ROOT_URL}/products/watch`, {
@@ -17,4 +17,8 @@ export default async function postProductWatch(
 	})
 
 	return response.json() as Promise<{ status: string; data: { msg: string }; error: { msg: string } }>
+}
+
+export default {
+	postProductWatch
 }

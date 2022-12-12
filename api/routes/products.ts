@@ -4,6 +4,7 @@ import app from '../__app';
 import db from '../db';
 import { validateToken } from '../utils/tokens';
 import { Token } from '../models/Token';
+import pick from 'lodash/pick';
 
 const jsonParser = bodyParser.json()
 
@@ -14,6 +15,15 @@ export default (): void => {
 
         res.send({ status: 200, data: { product }});
     });
+
+    app.get('/products/recent', async (req: Request, res: Response): Promise<void> => {
+        const productsCollection = db.collection('products')
+        const products = await productsCollection.find({}).sort({ $natural: -1}).limit(10).toArray()
+
+        const fields = ['_id', 'images', 'last_found_price', 'product_id', 'status', 'url']
+
+        res.send({ status: 200, data: { products: products.map(product => pick(product, fields)) }})
+    })
 
     app.post('/products/watch', jsonParser, async (req: Request<{}, {}, {url: string, threshold_price: string, token: string, email: string}>, res: Response): Promise<void> => {
         const { body } = req;
