@@ -40,6 +40,9 @@ pnpm install
 - `pnpm lint` - runs TypeScript, ESLint and Stylelint.
 - `pnpm validate` - runs `lint`, `test:ci` and `test:e2e:ci`.
 
+## DEPLOY
+Platform: `netlify`
+
 ## ENV
 
 ```

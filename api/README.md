@@ -26,7 +26,11 @@ DATABASE_URL='mongodb://<user>:<pass>@localhost/pricify'
 DATABASE_NAME='pricify'
 ```
 
-Also inlcude these env variables in `fly.toml` file.
+For production envieronment pass these variables via `flyctl` as follows:
+
+```
+flyctl secrets set DATABASE_URL=mongodb://<user>:<pass>@<address>:<port>/<database_name> DATABASE_NAME=ABCDEF
+```
 
 #### Database
 
@@ -43,6 +47,12 @@ Tokens are required in order to access the following routes:
 
 - history
 - products (soon)
+
+#### DEPLOY
+Platform: `fly.io`
+To deploy run `fly deploy`
+
+Prod database available at `moa.mydevil.net`.
 
 #### TODOS
 

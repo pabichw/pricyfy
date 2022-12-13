@@ -73,10 +73,13 @@ run following command;
 sudo chmod 775 logs/
 ```
 
+## Deploy
+Platform: `own shared hosting (MyDevil)`
+
 ## Example env
 
 DATABASE_URL='mongodb://user:pass@localhost/dbname'
-DATABASE_NAME='pricify'
+DATABASE_NAME='dbname'
 SMTP_HOST='xxx.com'
 SMTP_FROM='info@yourdomain.com'
 SMTP_PASS='YourPassword'
