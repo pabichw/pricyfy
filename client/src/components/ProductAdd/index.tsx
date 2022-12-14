@@ -1,4 +1,4 @@
-import postProductWatch from 'api/postProduct'
+import { postProductWatch } from 'api/postProduct'
 import Button from 'components/_atoms/Button'
 import Field from 'components/_atoms/Field'
 import Icon from 'components/_atoms/Icon'
@@ -32,7 +32,7 @@ function ProductAdd(): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [step, setStep] = useState<STEPS>(STEPS.FIRST)
 
-	const { register, handleSubmit } = useForm<TForm>()
+	const { register, reset, handleSubmit } = useForm<TForm>()
 
 	const handleResponse = (data: {
 		status: number
@@ -58,6 +58,10 @@ function ProductAdd(): JSX.Element {
 			.finally(() => setIsLoading(false))
 	}
 
+	const handleReset = () => {
+		reset()	
+		setStep(STEPS.FIRST)
+	}
 	return (
 		<form
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -90,7 +94,7 @@ function ProductAdd(): JSX.Element {
 						/>
 					</fieldset>
 					<div className='mt-5'>
-						<Button onClick={(): void => setStep(STEPS.THIRD)}>Confirm</Button>
+						<Button onClick={(): void => { setStep(STEPS.THIRD) }}>Confirm</Button>
 					</div>
 				</>
 			)}
@@ -100,7 +104,7 @@ function ProductAdd(): JSX.Element {
 						<Field name='code' label='Code' register={register} />
 					</fieldset>
 					<div className='mt-5'>
-						<Button type='submit'>{isLoading ? 'Loading...' : 'submit'}</Button>
+						<Button isLoading={isLoading} type='submit'>Submit</Button>
 					</div>
 				</>
 			)}
@@ -113,7 +117,7 @@ function ProductAdd(): JSX.Element {
 						All done
 					</p>
 					<div className='mt-5'>
-						<Button onClick={() => setStep(STEPS.FIRST)}>Add another</Button>
+						<Button onClick={handleReset}>Add another</Button>
 					</div>
 				</>
 			)}
