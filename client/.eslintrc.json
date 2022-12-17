@@ -26,6 +26,7 @@
 		"no-dupe-else-if": "error",
 		"no-promise-executor-return": "error",
 		"no-unreachable-loop": "error",
+		"no-underscore-dangle": ["error", { "allow": ["_id"] }],
 		"no-useless-backreference": "error",
 		"require-atomic-updates": "error",
 		"default-case-last": "error",
@@ -55,15 +56,6 @@
 		"@typescript-eslint/prefer-enum-initializers": "off",
 		"@typescript-eslint/prefer-readonly-parameter-types": "off",
 		"@typescript-eslint/prefer-regexp-exec": "off",
-		"@typescript-eslint/no-magic-numbers": [
-			"error",
-			{
-				"ignoreEnums": true,
-				"ignore": [0],
-				"enforceConst": true,
-				"detectObjects": true
-			}
-		],
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"@typescript-eslint/init-declarations": "off",
 		"@typescript-eslint/no-confusing-void-expression": [
@@ -76,7 +68,7 @@
 		"@typescript-eslint/member-ordering": "off",
 		"@typescript-eslint/prefer-includes": "off",
 		"@typescript-eslint/no-restricted-imports": "off",
-
+		"@typescript-eslint/no-magic-numbers": ["off"],
 		"import/no-deprecated": "error",
 		"import/order": "off",
 		"import/no-extraneous-dependencies": [

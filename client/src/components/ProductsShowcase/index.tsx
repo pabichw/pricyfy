@@ -1,6 +1,6 @@
-import ProductShowcaseItem from './components/ProductsShowcaseItem'
+import ProductShowcaseItem from './components/ProductsShowcaseItem';
 import { getRecentProducts } from '../../api/getProducts';
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import type { Product } from 'types/types';
 
 export enum ProductsShowcaseTypes {

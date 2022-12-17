@@ -70,7 +70,7 @@ def watch_products_queue():
                     "$push": {'recipients': {'$each': waiting_product['recipients']}}})
             else:
                 db.get_db()['products'].insert_one(
-                    {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients']})
+                    {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients'], 'status': 'JUST_ADDED'})
                 watch(waiting_product['url'],
                       waiting_product['threshold_price'])
 

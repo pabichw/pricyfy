@@ -107,6 +107,7 @@ class Watcher(Thread):
     def scrap(self):
         '''overloaded in site-specific watchers'''
         self.get_page()
+        self.mark_as_running()
         pass
 
     def check_inactive(self):
@@ -117,7 +118,11 @@ class Watcher(Thread):
         '''mark product as inactive'''
 
         db.get_db()['products'].update_one(
-            {"url": self.url}, {"$set": {'status': "INACTIVE"}})
+            {"url": self.product_id}, {"$set": {'status': "INACTIVE"}})
+
+    def mark_as_running(self):
+        '''mark product as under watch'''
+        db.get_db()['products'].update_one({"product_id": self.product_id}, {"$set": {'status': "RUNNING"}} )
 
     def add_product_id(self, product_id):
         '''adds product_id to entry when harvested'''

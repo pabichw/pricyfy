@@ -1,11 +1,10 @@
 export enum ProductStatus {
 	RUNNING = 'RUNNING',
-	JUST_ADDED = 'JUST_RUNNING',
+	JUST_ADDED = 'JUST_ADDED',
 	INACTIVE = 'INACTIVE'
 }
 
 export interface Product {
-	_id: string
 	product_id: string
 	images?: []
 	last_found_price?: number
@@ -13,11 +12,8 @@ export interface Product {
 	url: string
 }
 
-export enum HttpStatusCodes {
-	OK = 200
-}
-
-export interface Currency {
-  code: string 
-  symbol: string
+export interface ProductQueueEntry {
+    url: string
+    threshold_price: number
+    recipients: [string]
 }
