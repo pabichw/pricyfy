@@ -1,11 +1,12 @@
 interface Properties {
 	children: React.ReactNode
+  noSpacing: boolean
 }
 
-function Card({ children }: Properties): JSX.Element {
+function Card({ children, noSpacing }: Properties): JSX.Element {
 	return (
 		<div
-			className='my-12 -space-y-px rounded-md bg-white px-3 py-4 shadow-md'
+			className={`space-y-px overflow-hidden rounded-md bg-white ${noSpacing ? ``: `px-3 py-4`} shadow-md`}
 		>
 			{children}
 		</div>
