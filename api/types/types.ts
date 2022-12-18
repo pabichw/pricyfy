@@ -13,7 +13,15 @@ export interface Product {
 }
 
 export interface ProductQueueEntry {
-    url: string
-    threshold_price: number
-    recipients: [string]
+  url: string
+  threshold_price: number
+  recipients: [string]
+}
+
+export interface HistoryEntry {
+  product_id: string
+  product_title: string
+  price_parsed: number
+  price_threshold: number
+  parese_time: string
 }

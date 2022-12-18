@@ -5,7 +5,7 @@ import db from '../db';
 import { validateToken } from '../utils/tokens';
 import { Token } from '../models/Token';
 import pick from 'lodash/pick';
-import { Product, ProductQueueEntry, ProductStatus } from '../types/types';
+import { HistoryEntry, Product, ProductQueueEntry, ProductStatus } from '../types/types';
 
 const jsonParser = bodyParser.json()
 
@@ -58,4 +58,12 @@ export default (): void => {
 
         res.send({ status: 200, data: { msg: 'OK' }});
     });
+
+    app.get('/products/:id/history', async (req: Request<{id: string}>, res: Response): Promise<void> => {
+        const historyCollection = db.collection<HistoryEntry>('history')
+        const history = await historyCollection.find({'product_id': req.params.id}).sort({ $natural: -1}).limit(10).toArray()
+
+        const fields = ['parse_time', 'price_parsed']
+        res.send({ status: 200, data: { history: history.map(hist => pick(hist, fields)) }}) 
+    })
 }
