@@ -1,13 +1,17 @@
-import ProductsShowcase, { ProductsShowcaseTypes } from 'components/ProductsShowcase'
 import Head from 'components/Head'
+import ProductsShowcase, {
+	ProductsShowcaseTypes
+} from 'components/ProductsShowcase'
 import type { ReactElement } from 'react'
-import Promo from './components/Promo'
+import Promo from './Home/components/Promo'
 
-export default function HomePage(): ReactElement {
+export { Page }
+
+function Page(): ReactElement {
 	return (
 		<>
 			<Head title='Pricyfy' />
-			<div className='p-2 mt-12 max-w-[55rem] flex flex-col mx-auto items-center justify-center '>
+			<div className='mx-auto mt-12 flex max-w-[55rem] flex-col items-center justify-center p-2 '>
 				<Promo />
 				<div className='my-12 -space-y-px rounded-md'>
 					<ProductsShowcase type={ProductsShowcaseTypes.RECENT} />
