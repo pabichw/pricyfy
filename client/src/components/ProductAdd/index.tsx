@@ -59,7 +59,7 @@ function ProductAdd(): JSX.Element {
 	}
 
 	const handleReset = () => {
-		reset()	
+		reset()
 		setStep(STEPS.FIRST)
 	}
 	return (
@@ -94,7 +94,13 @@ function ProductAdd(): JSX.Element {
 						/>
 					</fieldset>
 					<div className='mt-5'>
-						<Button onClick={(): void => { setStep(STEPS.THIRD) }}>Confirm</Button>
+						<Button
+							onClick={(): void => {
+								setStep(STEPS.THIRD)
+							}}
+						>
+							Confirm
+						</Button>
 					</div>
 				</>
 			)}
@@ -104,13 +110,15 @@ function ProductAdd(): JSX.Element {
 						<Field name='code' label='Code' register={register} />
 					</fieldset>
 					<div className='mt-5'>
-						<Button isLoading={isLoading} type='submit'>Submit</Button>
+						<Button isLoading={isLoading} type='submit'>
+							Submit
+						</Button>
 					</div>
 				</>
 			)}
 			{step === STEPS.FOURTH && (
 				<>
-					<Icon scale={0.7} translateX='61%'>
+					<Icon scale={0.7}>
 						<Check />
 					</Icon>
 					<p className='text-m mt-1 text-center font-bold text-gray-700'>

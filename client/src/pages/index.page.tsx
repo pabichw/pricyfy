@@ -1,20 +1,26 @@
 import Head from 'components/Head'
-import ProductsShowcase, {
-	ProductsShowcaseTypes
-} from 'components/ProductsShowcase'
+import ProductsShowcase from 'components/ProductsShowcase'
 import type { ReactElement } from 'react'
+import type { Product } from 'types/types'
 import Promo from './Home/components/Promo'
 
 export { Page }
 
-function Page(): ReactElement {
+interface Properties {
+	recentProducts: Product[]
+}
+
+function Page({ recentProducts }: Properties): ReactElement {
 	return (
 		<>
 			<Head title='Pricyfy' />
 			<div className='mx-auto mt-12 flex max-w-[55rem] flex-col items-center justify-center p-2 '>
 				<Promo />
 				<div className='my-12 -space-y-px rounded-md'>
-					<ProductsShowcase type={ProductsShowcaseTypes.RECENT} />
+					<ProductsShowcase
+						products={recentProducts}
+						title='Recently uploaded'
+					/>
 				</div>
 			</div>
 		</>

@@ -1,42 +1,21 @@
-import ProductShowcaseItem from './components/ProductsShowcaseItem';
-import { getRecentProducts } from '../../api/getProducts';
-import { useEffect, useState } from 'react';
-import type { Product } from 'types/types';
-
-export enum ProductsShowcaseTypes {
-	RECENT = 'recent'
-}
+import type { Product } from 'types/types'
+import ProductShowcaseItem from './components/ProductsShowcaseItem'
 
 interface Properties {
-	type: ProductsShowcaseTypes
+	products: Product[]
+	title?: string
 }
 
-const CONTENT_MAP = {
-	[ProductsShowcaseTypes.RECENT]: {
-		fetchRequest: getRecentProducts,
-		title: 'Recently added'
-	}
-}
-
-function ProductShowcase({ type }: Properties): JSX.Element {
-	const [products, setProducts] = useState<Product[] | null>(null);
-
-	useEffect(() => {
-		async function doFetch(): Promise<void> {
-			const { data }  = await CONTENT_MAP[type].fetchRequest();
-			setProducts(data.products)
-		}
-
-		doFetch()
-	}, [type])
-
+function ProductShowcase({ products, title }: Properties): JSX.Element {
 	return (
 		<section>
-			<h1 className='text-xl'>{CONTENT_MAP[type].title}</h1>
+			{title && <h1 className='text-xl'>{title}</h1>}
 			<ul className='mt-5 grid gap-2'>
-				{products?.map(product => <ProductShowcaseItem key={product.product_id} data={product} />)}
+				{products?.map((product, idx) => (
+					<ProductShowcaseItem key={`${product.product_id}-${idx}`} data={product} />
+				))}
 			</ul>
-		</section>	
+		</section>
 	)
 }
 
