@@ -8,7 +8,7 @@ dotenv.config();
 const port = process.env.PORT;
 
 app.use(
-  cors({ origin: ['http://127.0.0.1:5173', 'http://localhost:5173', 'https://pricyfy.pabich.cc'] })
+  cors({ origin: ['http://127.0.0.1:3000', 'http://127.0.0.1:5173', 'http://localhost:3000', 'http://localhost:5173', 'https://pricyfy.pabich.cc'] })
 )
 
 initRoutes();
