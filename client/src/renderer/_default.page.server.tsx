@@ -2,8 +2,6 @@ import ReactDOMServer from 'react-dom/server'
 import PageShell from 'renderer/PageShell'
 import type { PageContextServer } from 'renderer/PageShell/types'
 import { dangerouslySkipEscape, escapeInject } from 'vite-plugin-ssr'
-import logoUrl from './logo.svg'
-
 import '../index.css'
 
 export { render }
@@ -31,7 +29,6 @@ async function render(pageContext: PageContextServer) {
 		>
 			<head>
 				<meta charset="UTF-8" />
-				<link rel="icon" type="image/png" href="${logoUrl}" />
 				<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 				<link rel="stylesheet" href="https://rsms.me/inter/inter.css"> 
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
