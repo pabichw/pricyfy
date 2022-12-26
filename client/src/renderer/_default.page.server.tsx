@@ -4,6 +4,8 @@ import type { PageContextServer } from 'renderer/PageShell/types'
 import { dangerouslySkipEscape, escapeInject } from 'vite-plugin-ssr'
 import logoUrl from './logo.svg'
 
+import '../index.css'
+
 export { render }
 export const passToClient = ['pageProps', 'urlPathname']
 
@@ -21,19 +23,28 @@ async function render(pageContext: PageContextServer) {
 		(documentProps && documentProps.description) ||
 		'App using Vite + vite-plugin-ssr'
 
-	const documentHtml = escapeInject`<!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" href="${logoUrl}" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="${desc}" />
-        <title>${title}</title>
-      </head>
-      <body>
-        <div id="root">${dangerouslySkipEscape(pageHtml)}</div>
-      </body>
-    </html>`
+	const documentHtml = escapeInject`
+		<!DOCTYPE html>
+		<html
+			lang="en"
+			class="text-gray-900 antialiased bg-gray-100"
+		>
+			<head>
+				<meta charset="UTF-8" />
+				<link rel="icon" type="image/png" href="${logoUrl}" />
+				<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+				<link rel="stylesheet" href="https://rsms.me/inter/inter.css"> 
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<meta name="description" content="${desc}" />
+				<meta name="theme-color" content="#42b883" />
+				<title>${title}</title>
+			</head>
+			<body>
+				<noscript>You need to enable JavaScript to run this app.</noscript>
+				<div id="root">${dangerouslySkipEscape(pageHtml)}</div>
+			</body>
+		</html>
+	`
 
 	return {
 		documentHtml,
