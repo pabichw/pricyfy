@@ -110,7 +110,7 @@ function ProductAdd(): JSX.Element {
 			)}
 			{step === STEPS.FOURTH && (
 				<>
-					<Icon scale={0.7}>
+					<Icon scale={0.7} translateX='61%'>
 						<Check />
 					</Icon>
 					<p className='text-m mt-1 text-center font-bold text-gray-700'>
