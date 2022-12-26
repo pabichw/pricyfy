@@ -9,6 +9,8 @@
 		"dev": "vite --open",
 		"preview": "vite preview",
 		"preview:test": "start-server-and-test preview http://localhost:4173",
+		"preview:render": "vite build && ts-node preview render",
+		"preview:static": "vite build && ts-node preview static",
 		"test": "vitest",
 		"test:ci": "vitest run",
 		"test:e2e": "pnpm preview:test 'cypress open'",
