@@ -1,5 +1,6 @@
 const defaultConfig = require('tailwindcss/defaultConfig')
 const formsPlugin = require('@tailwindcss/forms')
+const lineClampPlugin = require('@tailwindcss/line-clamp')
 
 /** @type {import('tailwindcss/types').Config} */
 const config = {
@@ -12,6 +13,6 @@ const config = {
 		}
 	},
 	experimental: { optimizeUniversalDefaults: true },
-	plugins: [formsPlugin]
+	plugins: [formsPlugin, lineClampPlugin]
 }
 module.exports = config

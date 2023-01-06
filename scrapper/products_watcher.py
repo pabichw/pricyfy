@@ -18,7 +18,7 @@ from watchers.olx_watcher import OlxWatcher
 from utils.logger import Logger
 from db import db
 from utils.threading import set_interval
-from statistics import create_statistics
+from stats.stats import create_statistics
 from utils.product import ProductUtil
 
 PRODUCTS_TO_WATCH = []

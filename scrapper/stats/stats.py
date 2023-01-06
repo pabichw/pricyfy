@@ -19,5 +19,3 @@ def create_statistics():
 
     start()
     set_interval(start, CREATE_STATISTICS_INTERVAL)
-
-__all__ = ['create_statistics']

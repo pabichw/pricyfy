@@ -11,6 +11,7 @@ export interface Product {
 	last_found_price?: number
 	status: ProductStatus
 	url: string
+	price_history: HistoryEntry[]
 }
 
 export enum HttpStatusCodes {
@@ -20,4 +21,10 @@ export enum HttpStatusCodes {
 export interface Currency {
   code: string 
   symbol: string
+}
+
+export interface HistoryEntry {
+	_id: string
+	price_parsed: string
+	parse_time: string
 }

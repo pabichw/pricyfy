@@ -6,6 +6,7 @@ import { validateToken } from '../utils/tokens';
 import { Token } from '../models/Token';
 import pick from 'lodash/pick';
 import { HistoryEntry, Product, ProductQueueEntry, ProductStatus } from '../types/types';
+import { Document } from 'mongodb';
 
 const jsonParser = bodyParser.json()
 
@@ -17,14 +18,26 @@ export default (): void => {
         res.send({ status: 200, data: { product }});
     });
 
-    app.get('/products/recent', async (req: Request, res: Response): Promise<void> => {
+    app.get('/products/recent', async (_, res: Response): Promise<void> => {
+        const fields = ['_id', 'price_history', 'images', 'last_found_price', 'product_id', 'status', 'url']
+
         const productsCollection = db.collection<Product>('products')
-        const products = await productsCollection.find({}).sort({ $natural: -1}).limit(10).toArray()
+        const products = (await productsCollection.aggregate([
+            { $match: { status: { $ne: ProductStatus.JUST_ADDED }}},
+            { $lookup: {
+                from: 'history',
+                localField: 'product_id',
+                foreignField: 'product_id',
+                as: 'price_history'
+                }
+            },
+            { $sort: { _id: -1 } },
+            { $limit: 15 }
+        ])
+        .toArray())
+        .map((product: Document) => ({...pick(product, fields) }))
 
-        const fields = ['_id', 'images', 'last_found_price', 'product_id', 'status', 'url']
-        const noJustAdded = (product: Product) => product.status !== ProductStatus.JUST_ADDED
-
-        res.send({ status: 200, data: { products: products.filter(noJustAdded).map(product => pick(product, fields)) }})
+        res.send({ status: 200, data: { products }})
     })
 
     app.post('/products/watch', jsonParser, async (req: Request<{}, {}, {url: string, threshold_price: string, token: string, email: string}>, res: Response): Promise<void> => {
