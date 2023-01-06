@@ -4,7 +4,7 @@ interface Properties extends React.HTMLProps<HTMLInputElement> {
 
 function Icon({ children, scale = 1, ...properties }: Properties): JSX.Element {
 	return (
-		<div className='w-full bg-amber-100 text-center'>
+		<div className='w-full text-center'>
 			<span
 				className='inline-block'
 				style={{ transform: `scale(${scale})` }}

@@ -1,8 +1,10 @@
 '''Otodom watcher module'''
 import datetime
+from utils.logger import Logger
 from utils.product import ProductUtil
 from watchers.watcher import Watcher, NoElemFoundExcpetion
 from db import db
+import json
 
 
 class OtodomWatcher(Watcher):
@@ -59,15 +61,17 @@ class OtodomWatcher(Watcher):
         super().scrap()
 
         try:
-            images = self.soup.select(
-                'img', {'class': 'image-gallery-image'})
+            next_script = self.soup.find('script', {'id': '__NEXT_DATA__'})
+            site_json = json.loads(next_script.string)
+            images = site_json['props']['pageProps']['ad']['images']
 
             if images:
                 srcs = list(map(
-                    lambda img: img.get('src'), images))
+                    lambda img: img.get("medium"), images))
 
                 db.get_db()['products'].update_one(
                     {"product_id": self.product_id},
                     {"$set": {'images': srcs}})
-        except BaseException:
+        except BaseException as e:
             print(f'Couldn\'t find images for {self.url}')
+            print(f'Error: {e}')
