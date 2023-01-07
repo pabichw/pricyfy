@@ -99,10 +99,10 @@ function ProductsShowcaseItem({ data }: Properties): JSX.Element {
 						src={data.images?.[0]}
 					/>
 				</span>
-				<span className='col-span-2 sm:col-span-3 text-sm line-clamp-3 group-hover:underline'>
+				<span className='col-span-1 md:col-span-3 text-sm line-clamp-3 group-hover:underline'>
 					{data.product_id}
 				</span>
-        <span className='col-span-1'>
+        <span className='col-span-2 md:col-span-1'>
           <Line 
             options={options} 
             data={historyData}
