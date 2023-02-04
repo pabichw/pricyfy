@@ -55,6 +55,8 @@ class OtodomWatcher(Watcher):
         if not initial: 
             self.check_notify(price_parsed, prod_title)
 
+        self.update_last_price(price_parsed)
+
     def collect_images(self):
         print('Collecting images...')
 

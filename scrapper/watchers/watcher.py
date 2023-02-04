@@ -44,7 +44,8 @@ class Watcher(Thread):
         if not db_product.get('product_id', None):
             self.add_product_id(product_id=Watcher.create_id(self.url))
 
-        self.product_id = db_product.get('product_id', None)
+        self.product_id = Watcher.create_id(self.url)
+        print('self.product_id', self.product_id)
         self.scrap(initial=True)
 
         db_product = ProductUtil.get_db_entity({ "url": self.url })
@@ -61,7 +62,6 @@ class Watcher(Thread):
     def get_page(self):
         '''get content of a page'''
 
-        print('page url', self.url)
         page = requests.get(self.url, headers=headers)
         self.soup = BeautifulSoup(page.content, 'lxml')
 
@@ -73,7 +73,7 @@ class Watcher(Thread):
             {"product_id":  self.product_id})
 
         parse_time = datetime.datetime.now()
-        print(f'[{parse_time}]{self.title}: {prod_title} : {price_parsed} threshold: {ProductUtil.get_current_price(db_product)}')
+        print(f'[{parse_time}]{self.title}: {prod_title} : {price_parsed} current price: {ProductUtil.get_current_price(db_product)}')
 
         if self.check_drop_requirements(data={'price_parsed': price_parsed, 'db_product': db_product}):
             print('[INFO] Sending price drop email (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧')
@@ -130,7 +130,6 @@ class Watcher(Thread):
     def check_drop_requirements(self, data={}):
         '''checks for notify requirements. Can be overriden by specific watcher method'''
 
-        print(data.get('price_parsed'), ProductUtil.get_current_price(data.get('db_product')))
         return data.get('price_parsed') < ProductUtil.get_current_price(data.get('db_product'))
 
     def check_raise_requirements(self, data={}):
