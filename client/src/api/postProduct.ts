@@ -1,6 +1,5 @@
 interface TData {
 	url: string
-	threshold_price: string
 	email: string
 	token: string
 }

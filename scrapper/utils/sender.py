@@ -43,7 +43,7 @@ class Sender:
             msg['Subject'] = f"""💹 Price of {variables.get('prod_title', None)} went down!"""
         elif type is EmailTemplates.WATCH_STARTED:
             msg = MIMEText(
-                f"""Watching offer {variables.get('url', None)} has started. You will be notified once the price has changed!\n\nInitial price: {variables.get('threshold_price', None)}""")
+                f"""Watching offer {variables.get('url', None)} has started. You will be notified once the price has changed!""")
             msg['Subject'] = f"""ℹ️ Watching has started!"""
         elif type is EmailTemplates.WATCH_CANCELLED:
             msg = MIMEText(
@@ -65,7 +65,7 @@ class Sender:
                             <p>
                                 Last found price: {variables.get('last_price', None)}
                             </p>
-                            {'<br/>'.join(list(map(lambda src: f'<img src={src} width=500px/>', variables.get("images", []))))}
+                            {'<br/>'.join(list(map(lambda src: f'<img src={src} width=500px />', variables.get("images") or [])))}
                         </body>
                     </html>
                 """, 'html')

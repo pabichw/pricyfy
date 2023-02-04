@@ -14,7 +14,6 @@ export interface Product {
 
 export interface ProductQueueEntry {
   url: string
-  threshold_price: number
   recipients: [string]
 }
 

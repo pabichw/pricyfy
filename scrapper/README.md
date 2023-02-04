@@ -38,7 +38,6 @@ There is multiple way to setup products.
     ```
         {
             'url': "https://olx.pl/mieszkanie-asdasdasdada"
-            'threshold_price': 399000.00 
         }
     ```
 </details>

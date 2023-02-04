@@ -9,6 +9,7 @@ from const.options import SCRAPPING_INTERVAL_SECONDS
 from db import db
 from utils.sender import EmailTemplates, Sender
 from utils.product import ProductUtil
+from utils.logger import Logger
 
 headers = {
     "User-Agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
@@ -38,31 +39,29 @@ class Watcher(Thread):
         self.stopped = event
         self.url = URL
 
-        db_product = ProductUtil.get_db_entity({"url": self.url})
+        db_product = ProductUtil.get_db_entity({ "url": self.url })  # refresh
 
         if not db_product.get('product_id', None):
             self.add_product_id(product_id=Watcher.create_id(self.url))
 
-        db_product = ProductUtil.get_db_entity({"url": self.url})  # refresh
         self.product_id = db_product.get('product_id', None)
+        self.scrap(initial=True)
 
-        if db_product.get('status', None) == 'INACTIVE':
-            self.stop()
-        else:
-            if not db_product.get('images', None):
-                self.collect_images()
+        db_product = ProductUtil.get_db_entity({ "url": self.url })
+        if not db_product.get('images', None):
+            self.collect_images()
 
     def run(self):
         while not self.stopped.wait(SCRAPPING_INTERVAL_SECONDS):
             try:
                 self.scrap()
             except NoElemFoundExcpetion as exception:
-                print('ARGHH!', exception,
-                      '\nBut I will keep cracking chief! (＠＾◡＾)')
+                print('ARGHH!', exception, '\nBut I will keep cracking chief! (＠＾◡＾)')
 
     def get_page(self):
         '''get content of a page'''
 
+        print('page url', self.url)
         page = requests.get(self.url, headers=headers)
         self.soup = BeautifulSoup(page.content, 'lxml')
 
@@ -102,7 +101,6 @@ class Watcher(Thread):
                 to=db_product.get('recipients', []),
                 type=EmailTemplates.PRICE_RAISE)
 
-        self.update_last_price(price_parsed)
 
     def scrap(self):
         '''overloaded in site-specific watchers'''
@@ -117,8 +115,7 @@ class Watcher(Thread):
     def mark_as_inactive(self):
         '''mark product as inactive'''
 
-        db.get_db()['products'].update_one(
-            {"url": self.product_id}, {"$set": {'status': "INACTIVE"}})
+        db.get_db()['products'].update_one({"product_id": self.product_id}, {"$set": {'status': "INACTIVE"}})
 
     def mark_as_running(self):
         '''mark product as under watch'''
@@ -133,6 +130,7 @@ class Watcher(Thread):
     def check_drop_requirements(self, data={}):
         '''checks for notify requirements. Can be overriden by specific watcher method'''
 
+        print(data.get('price_parsed'), ProductUtil.get_current_price(data.get('db_product')))
         return data.get('price_parsed') < ProductUtil.get_current_price(data.get('db_product'))
 
     def check_raise_requirements(self, data={}):
@@ -147,8 +145,7 @@ class Watcher(Thread):
     def update_last_price(self, price):
         '''updates last price'''
 
-        db.get_db()['products'].update_one(
-            {"product_id": self.product_id}, {"$set": {'last_found_price': price}})
+        db.get_db()['products'].update_one({"product_id": self.product_id}, {"$set": {'last_found_price': price}})
 
     def collect_images(self):
         '''collecting images'''

@@ -9,7 +9,6 @@ import toast from 'react-hot-toast'
 
 interface TForm {
 	url: string
-	threshold_price: string
 	code: string
 	email: string
 }
@@ -50,7 +49,6 @@ function ProductAdd(): JSX.Element {
 		setIsLoading(true)
 		await postProductWatch({
 			url: data.url,
-			threshold_price: data.threshold_price,
 			token: data.code,
 			email: data.email
 		})
@@ -58,10 +56,11 @@ function ProductAdd(): JSX.Element {
 			.finally(() => setIsLoading(false))
 	}
 
-	const handleReset = () => {
+	const handleReset = (): void => {
 		reset()
 		setStep(STEPS.FIRST)
 	}
+
 	return (
 		<form
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -71,11 +70,6 @@ function ProductAdd(): JSX.Element {
 				<>
 					<fieldset className='united-borders'>
 						<Field name='url' label='Url' register={register} />
-						<Field
-							name='threshold_price'
-							label='Threshold price'
-							register={register}
-						/>
 					</fieldset>
 					<div className='mt-5'>
 						<Button onClick={(): void => setStep(STEPS.SECOND)}>Confirm</Button>

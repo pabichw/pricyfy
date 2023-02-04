@@ -40,7 +40,7 @@ export default (): void => {
         res.send({ status: 200, data: { products }})
     })
 
-    app.post('/products/watch', jsonParser, async (req: Request<{}, {}, {url: string, threshold_price: string, token: string, email: string}>, res: Response): Promise<void> => {
+    app.post('/products/watch', jsonParser, async (req: Request<{}, {}, {url: string, token: string, email: string}>, res: Response): Promise<void> => {
         const { body } = req;
 
         const token: Token = { id: body.token }
@@ -53,19 +53,18 @@ export default (): void => {
         }
 
         const productsCollection = db.collection<ProductQueueEntry>('products_queue')
-        const findResult = await productsCollection.countDocuments({ 'url': body.url }, { limit: 1 });
+        const count = await productsCollection.countDocuments({ 'url': body.url }, { limit: 1 });
         
-        if (findResult > 0) {
+        if (count > 0) {
             await productsCollection.updateOne({ url: body.url }, { $addToSet: { recipients: body.email }})
         } else {
             const insertResult = await productsCollection.insertOne({ 
                 url: body.url, 
-                threshold_price: Number(body.threshold_price),
                 recipients: [body.email]
             })
     
             if (insertResult) {
-                console.log(`[Queue] Product added: ${body.url} : ${body.threshold_price}`)
+                console.log(`[Queue] Product added: ${body.url}`)
             }
         }
 

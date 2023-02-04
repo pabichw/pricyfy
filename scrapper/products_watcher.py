@@ -24,7 +24,7 @@ from utils.product import ProductUtil
 PRODUCTS_TO_WATCH = []
 
 
-def watch(url, price):
+def watch(url):
     '''run watch process for each product'''
 
     stop_flag = Event()
@@ -33,15 +33,15 @@ def watch(url, price):
     thread_handler = Thread()
 
     if domain == ShopDomains.AMAZON:
-        thread_handler = AmazonWatcher(stop_flag, url, price)
+        thread_handler = AmazonWatcher(stop_flag, url)
     elif domain == ShopDomains.MEDIA_EXPERT:
-        thread_handler = MediaExpertWatcher(stop_flag, url, price)
+        thread_handler = MediaExpertWatcher(stop_flag, url)
     elif domain == ShopDomains.OTO_DOM:
-        thread_handler = OtodomWatcher(stop_flag, url, price)
+        thread_handler = OtodomWatcher(stop_flag, url)
     elif domain == ShopDomains.OLX:
-        thread_handler = OlxWatcher(stop_flag, url, price)
+        thread_handler = OlxWatcher(stop_flag, url)
     elif domain == ShopDomains.M_OLX:
-        thread_handler = OlxWatcher(stop_flag, url, price)
+        thread_handler = OlxWatcher(stop_flag, url)
     # elif domain == SHOPS_DOMAINS.KOMPUTRONIK:
         # threadHandler = KomputronikWatcher(stop_flag, URL, price)
     else:
@@ -56,31 +56,24 @@ def watch_products_queue():
         productsQueue = db.get_db()['products_queue'].find({})
 
         for waiting_product in productsQueue:
-            print(
-                f"-- Adding: {waiting_product['url']} : {waiting_product['threshold_price']} : {waiting_product['threshold_price']}")
+            print(f"-- Adding: {waiting_product['url']}")
 
             product_id = Watcher.create_id(waiting_product['url'])
 
             if db.get_db()['products'].count_documents({'product_id': product_id}) != 0:
-                print(
-                    f'Product already exists {product_id} Simply adding recipients: {waiting_product["recipients"]}')
+                print( f'Product already exists {product_id} Simply adding recipients: {waiting_product["recipients"]}')
                 # TODO: handle email already a recipient and Product exists but INACTIVE
 
-                db.get_db()['products'].update_one({"product_id": product_id}, {
-                    "$push": {'recipients': {'$each': waiting_product['recipients']}}})
+                db.get_db()['products'].update_one({"product_id": product_id}, { "$push": {'recipients': {'$each': waiting_product['recipients']}}})
             else:
-                db.get_db()['products'].insert_one(
-                    {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price'], 'recipients': waiting_product['recipients'], 'status': 'JUST_ADDED'})
-                watch(waiting_product['url'],
-                      waiting_product['threshold_price'])
+                db.get_db()['products'].insert_one({ 'url': waiting_product['url'], 'recipients': waiting_product['recipients'], 'status': 'JUST_ADDED' })
+                watch(waiting_product['url'])
 
-            db.get_db()['products_queue'].delete_one(
-                {'url': waiting_product['url'], 'threshold_price': waiting_product['threshold_price']})
-
+            db.get_db()['products_queue'].delete_one({ 'url': waiting_product['url'] })
+            
             Sender.send_mail(
                 variables={
-                    'url': waiting_product['url'],
-                    'threshold_price': waiting_product['threshold_price']
+                    'url': waiting_product['url']
                 },
                 to=waiting_product['recipients'],
                 type=EmailTemplates.WATCH_STARTED)
@@ -126,18 +119,16 @@ def load_products():
     print('[INFO] Loading products from DB...')
 
     products_collection = db.get_db()['products']
-    products_all = products_collection.find({})
+    products_all = products_collection.find({ "status": { "$ne": "INACTIVE" } })
 
     for document in products_all:
-        print(document)
         PRODUCTS_TO_WATCH.append(
-            Product(document['url'], document['threshold_price']))
+            Product(document['url'], ProductUtil.get_current_price(document)))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-m', '--mode', help="set mode [default\\loggertest\\emailtest\\dbtest]")
+    parser.add_argument( '-m', '--mode', help="set mode [default\\loggertest\\emailtest\\dbtest]")
     args = parser.parse_args()
 
     load_dotenv(find_dotenv())
@@ -150,9 +141,7 @@ if __name__ == "__main__":
         test_email()
     else:
         load_products()
-        list(map(lambda product: watch(
-            product.url,
-            ProductUtil.get_current_price(db.get_db()['products'].find_one({'url': product.url}))), PRODUCTS_TO_WATCH))
+        list(map(lambda product: watch(product.url), PRODUCTS_TO_WATCH))
 
         watch_products_queue()
         create_statistics()
