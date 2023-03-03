@@ -16,12 +16,14 @@ async function render(pageContext: PageContextServer) {
 	)
 
 	const { documentProps } = pageContext.exports
+
 	const title =
 		(documentProps && documentProps.title) ||
 		'Pricyfy - Watching your fav offers 🤟'
+
 	const desc =
 		(documentProps && documentProps.description) ||
-		'App using Vite + vite-plugin-ssr'
+		'Keep an eye on your ads 100% free of charge'
 
 	const documentHtml = escapeInject`
 		<!DOCTYPE html>

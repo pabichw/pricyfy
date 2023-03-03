@@ -1,13 +1,13 @@
 import './Check.css'
 
-function Check() {
+function Check(): JSX.Element {
 	return (
 		<div className='animation-ctn'>
 			<div className='icon icon--order-success svg'>
 				<svg xmlns='http://www.w3.org/2000/svg' width='154px' height='154px'>
 					<g fill='none' stroke='#22AE73' strokeWidth='2'>
-						<circle cx='77' cy='77' r='72'></circle>
-						<circle id='colored' fill='#22AE73' cx='77' cy='77' r='72'></circle>
+						<circle cx='77' cy='77' r='72'/>
+						<circle id='colored' fill='#22AE73' cx='77' cy='77' r='72'/>
 						<polyline
 							className='st0'
 							stroke='#fff'

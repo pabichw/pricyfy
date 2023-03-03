@@ -1,27 +1,27 @@
 import React from 'react'
 import { PageContextProvider } from './usePageContext'
-import type {PageContext} from './types'
+import type { PageContext } from './types'
 
 import { Toaster } from 'react-hot-toast';
 
-function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }) {
+function Layout({ children }: { children: React.ReactNode }): JSX.Element {
+  return (
+    <div>
+      {children}
+    </div>
+  )
+}
+
+function PageShell({ children, pageContext }: { children: React.ReactNode; pageContext: PageContext }): JSX.Element {
   return (
     <React.StrictMode>
       <PageContextProvider pageContext={pageContext}>
         <Layout>
           {children}
         </Layout>
-				<Toaster position='top-right' />
+        <Toaster position='top-right' />
       </PageContextProvider>
     </React.StrictMode>
-  )
-}
-
-function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <div>
-      {children}
-    </div>
   )
 }
 
