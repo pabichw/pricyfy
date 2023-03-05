@@ -18,7 +18,9 @@ export default (): void => {
         if (req.query.id) {
             products = await productsCollection.find({ product_id: req.query.id }).toArray()
         } else {
-            products = await productsCollection.find({}).toArray()
+            products = await productsCollection.aggregate([
+                { $sort: { _id: -1 } },
+            ]).toArray()
         }
 
         res.send({ status: 200, data: { products }});
