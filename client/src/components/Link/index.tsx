@@ -9,7 +9,7 @@ interface LinkProperties {
 
 function Link({ to, children }: LinkProperties): React.ReactElement {
   return (
-    <a className="hover:text-indigo-800 transition-colors" href={to}>{children}</a>
+    <a className="hover:text-indigo-800 transition-colors duration-500" href={to}>{children}</a>
   )
 }
 
