@@ -3,10 +3,12 @@ import { PageContextProvider } from './usePageContext'
 import type { PageContext } from './types'
 
 import { Toaster } from 'react-hot-toast';
+import { TopNav } from 'components/TopNav';
 
 function Layout({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <div>
+      <TopNav />
       {children}
     </div>
   )
