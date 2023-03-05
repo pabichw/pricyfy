@@ -13,9 +13,15 @@ const jsonParser = bodyParser.json()
 export default (): void => {
     app.get('/products', async (req: Request, res: Response): Promise<void> => {
         const productsCollection = db.collection('products')
-        const product = await productsCollection.find({ product_id: req.query.id }).toArray()
+        let products
 
-        res.send({ status: 200, data: { product }});
+        if (req.query.id) {
+            products = await productsCollection.find({ product_id: req.query.id }).toArray()
+        } else {
+            products = await productsCollection.find({}).toArray()
+        }
+
+        res.send({ status: 200, data: { products }});
     });
 
     app.get('/products/recent', async (_, res: Response): Promise<void> => {

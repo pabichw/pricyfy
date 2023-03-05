@@ -25,6 +25,7 @@ function TopNav(): React.ReactElement {
       </a>
       <ul className="flex gap-4 md:gap-10 justify-center items-center">
         <NavItem to="/">Home</NavItem>
+        <NavItem to="/browse">Browse</NavItem>
         <NavItem to="/about">About</NavItem>
       </ul>
     </nav>
