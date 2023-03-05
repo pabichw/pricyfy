@@ -6,7 +6,7 @@ export { Logo }
 
 function Logo() {
   return (
-    <img className="object-cover h-10 w-fit" src={logo} />
+    <img className="object-cover h-10 w-11" src={logo} />
   )
 }
 
