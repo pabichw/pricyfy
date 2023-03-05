@@ -11,7 +11,7 @@ function Page(): ReactElement {
     <>
       <Head title='Pricyfy - About us' />
       <div className='mx-auto mt-12 flex flex-col items-center justify-center p-2 '>
-        <article className='min-w-[55rem] rounded-md bg-white p-8 text-gray-800 shadow-md transition'>
+        <article className='md:min-w-[45rem] rounded-md bg-white p-8 text-gray-800 shadow-md transition'>
           <header className='mb-3 text-xl text-center'>About us</header>
           <p className='text-s text-justify'>
             Pricify is a free software to <b>monitor price changes</b> of ads from selected, supported advertisements websites.
