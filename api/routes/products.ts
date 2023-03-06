@@ -20,6 +20,13 @@ export default (): void => {
         } else {
             products = await productsCollection.aggregate([
                 { $sort: { _id: -1 } },
+                { $lookup: {
+                    from: 'history',
+                    localField: 'product_id',
+                    foreignField: 'product_id',
+                    as: 'price_history'
+                    }
+                },
             ]).toArray()
         }
 
