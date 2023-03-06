@@ -6,7 +6,7 @@ import {
 } from 'chart.js';
 import { formatPrice } from 'components/utils/Price';
 import { Line } from 'react-chartjs-2';
-import type { Product } from 'types/types';
+import { Product, ProductStatus } from 'types/types';
 
 ChartJS.register(
   CategoryScale,
@@ -84,10 +84,10 @@ function ProductsShowcaseItem({ data }: Properties): JSX.Element {
   }
 
   return (
-    <li className='group h-[6rem] rounded-md bg-white p-3 text-gray-800 shadow-md transition hover:shadow-xl'>
+    <li className='relative group h-[6rem] rounded-md bg-white p-3 text-gray-800 shadow-md transition hover:shadow-xl'>
       <a
         href={data.url}
-        className='grid h-full w-full grid-cols-6 gap-x-2 sm:gap-x-4'
+        className='grid h-full w-full grid-cols-6 gap-x-2 sm:gap-x-4 pointer-events-all'
         target='__blank'
         referrerPolicy='no-referrer'
       >
@@ -112,6 +112,7 @@ function ProductsShowcaseItem({ data }: Properties): JSX.Element {
           {formatPrice(data.last_found_price, { code: 'PLN', symbol: 'zł' })}
         </span>
       </a>
+      {data.status === ProductStatus.INACTIVE && <div className="absolute inset-0 backdrop-grayscale backdrop-brightness-120 pointer-events-none" />}
     </li>
   )
 }
