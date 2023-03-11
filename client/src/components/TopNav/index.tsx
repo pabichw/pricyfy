@@ -11,7 +11,7 @@ interface NavItemProperties {
 
 function NavItem({ to, children }: NavItemProperties): React.ReactElement {
   return (
-    <li className="text-neutral-400 font-bold">
+    <li className="text-slate-500 font-semibold">
       <Link to={to}>{children}</Link>
     </li>
   )

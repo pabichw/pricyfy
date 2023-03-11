@@ -39,14 +39,14 @@ export default function StatsShowcase({ stats }: StatsShowcaseProperties) {
   }
 
   return (
-    <div className='flex flex-col md:flex-row justify-center gap-5'>
+    <div className='flex flex-col md:flex-row w-10/12 md:w-100 mx-auto justify-center gap-5'>
       {Object.entries(stats)
         .filter(([name]) => !['_id', 'created_at'].includes(name))
         .map(([name, value]) => {
           const preparedValue = valuePrepare(name, value)
 
           return (
-            <div className='flex flex-col align-center justify-center w-100 md:w-56 py-16 bg-white rounded-md shadow-md '>
+            <div className='flex flex-col align-center justify-center w-100 md:w-56 py-8 md:py-16 bg-white rounded-md shadow-md '>
               <span className='block text-m text-slate-700 text-center'>{nameMapper[name]}</span>
               <span className={`mt-1 flex items-center justify-center text-xl text-center font-bold ${preparedValue.style}`}>
                 {preparedValue.icon &&
