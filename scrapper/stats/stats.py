@@ -21,9 +21,10 @@ def create_statistics(once = False):
 
         for product in products.find({}):
             id = product.get('product_id', None)
+            print('id', id)
             if not id:
                 # very old product
-                return
+                continue
 
             max_price_parsed_document = history.find({ 'product_id': id }).sort('price_parsed', DESCENDING).limit(1)
             max_document = next(max_price_parsed_document, None)
@@ -37,8 +38,6 @@ def create_statistics(once = False):
                 # TODO: should handle different currencies somehow
                 aggregated_change += change
                 products_count += 1
-
-                print(f'change for item {id} is {change}')
 
         data['average_change'] = round(aggregated_change / products_count, 0)
 
