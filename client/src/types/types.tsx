@@ -28,3 +28,12 @@ export interface HistoryEntry {
   price_parsed: string
   parse_time: string
 }
+
+export interface StatisticsDTO {
+  created_at: string
+  count: number
+  average_change: number
+  works_since: string
+}
+
+export type LastStatisticsDTO = StatisticsDTO

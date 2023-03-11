@@ -19,7 +19,7 @@ function NavItem({ to, children }: NavItemProperties): React.ReactElement {
 
 function TopNav(): React.ReactElement {
   return (
-    <nav className="sticky flex h-[4rem] top-0 bg-white px-5 z-50 w-screen items-center justify-end md:justify-center shadow-sm">
+    <nav className="sticky flex h-[4rem] top-0 bg-white px-5 z-50 w-100 items-center justify-end md:justify-center shadow-sm">
       <a className="absolute box-content inset-y-3 inset-x-4 lg:inset-x-8 w-11 shadow-md shadow-indigo-300 hover:shadow-lime-300 transition-shadow duration-500" href="/">
         <Logo />
       </a>

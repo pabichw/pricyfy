@@ -99,6 +99,10 @@ def test_email():
     print(f'Sending to {email}...')
     Sender.send_mail(to=[email], type=EmailTemplates.TEST)
 
+def test_statistics():
+    '''test statistics creation'''
+
+    create_statistics(once = True)
 
 def load_products_from_csv():
     '''load products from csv'''
@@ -128,7 +132,7 @@ def load_products():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument( '-m', '--mode', help="set mode [default\\loggertest\\emailtest\\dbtest]")
+    parser.add_argument( '-m', '--mode', help="set mode [default\\loggertest\\emailtest\\dbtest\\statstest]")
     args = parser.parse_args()
 
     load_dotenv(find_dotenv())
@@ -139,6 +143,8 @@ if __name__ == "__main__":
         test_database()
     elif args.mode == 'emailtest':
         test_email()
+    elif args.mode == 'statstest':
+        test_statistics()
     else:
         load_products()
         list(map(lambda product: watch(product.url), PRODUCTS_TO_WATCH))
