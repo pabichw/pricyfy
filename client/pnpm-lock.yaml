@@ -30,6 +30,7 @@ specifiers:
   csstype: ^3.1.1
   cypress: 10.9.0
   cz-conventional-changelog: 3.3.0
+  date-fns: ^2.29.3
   eslint: 8.24.0
   eslint-config-airbnb: 19.0.4
   eslint-config-airbnb-base: 15.0.0
@@ -83,6 +84,7 @@ dependencies:
   chart.js: 4.1.1
   classnames: 2.3.2
   csstype: 3.1.1
+  date-fns: 2.29.3
   node-fetch: 3.3.0
   react: 18.2.0
   react-chartjs-2: 5.1.0_dxa6kz4w32vmgoazz4fv7vwm2e
@@ -3294,6 +3296,11 @@ packages:
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
     dev: true
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /dayjs/1.11.5:
     resolution: {integrity: sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==}
