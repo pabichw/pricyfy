@@ -61,8 +61,8 @@ To execute script:
 
 ```
 source venv/bin/activate
-pip install
-python productsWatcher.py
+python3 -m pip install -r requirements.txt
+python3 products_watcher.py
 ```
 
 Script might need write permissions in order to log product history. In order to set permissions to `logs` directory

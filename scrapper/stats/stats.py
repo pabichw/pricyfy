@@ -21,7 +21,6 @@ def create_statistics(once = False):
 
         for product in products.find({}):
             id = product.get('product_id', None)
-            print('id', id)
             if not id:
                 # very old product
                 continue

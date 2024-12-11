@@ -45,7 +45,6 @@ class Watcher(Thread):
             self.add_product_id(product_id=Watcher.create_id(self.url))
 
         self.product_id = Watcher.create_id(self.url)
-        print('self.product_id', self.product_id)
         self.scrap(initial=True)
 
         db_product = ProductUtil.get_db_entity({ "url": self.url })

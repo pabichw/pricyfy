@@ -24,7 +24,7 @@ class OlxWatcher(Watcher):
 
         # TODO: extract collect data?
         try:
-            prod_title = self.soup.find('h1', {"data-cy": "ad_title"}).get_text().strip()
+            prod_title = self.soup.select('div[data-cy="ad_title"] h4')[0].get_text().strip()
         except BaseException:
             Logger.log(f'ERR-SCRAP-{datetime.datetime.now()}-{self.product_id}', self.soup, 'html')
             self.mark_as_inactive()

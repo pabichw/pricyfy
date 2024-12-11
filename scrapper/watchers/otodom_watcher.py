@@ -34,8 +34,7 @@ class OtodomWatcher(Watcher):
 
         price = ''
         try:
-            price = self.soup.find(
-                "strong", {"data-cy": "adPageHeaderPrice"}).get_text()
+            price = self.soup.find("strong", {"data-cy": "adPageHeaderPrice"}).get_text()
         except BaseException:
             raise NoElemFoundExcpetion('Couldn\'t find price for', self.url)
 
