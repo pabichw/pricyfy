@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Serves data scrapped by the scrapper",
   "main": "index.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "npx tsc",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",

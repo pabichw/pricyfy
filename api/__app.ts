@@ -10,7 +10,7 @@ const _getApp = (): Express => {
         app = express()
 
         app.use(cors({
-            origin: 'https://pricyfy.pabich.cc/',
+            origin: 'https://pricyfy.pabich.cc',
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization'],
             credentials: true
